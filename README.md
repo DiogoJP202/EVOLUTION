@@ -108,6 +108,7 @@ Fullstack C#/.NET
 
 Os documentos de acompanhamento ficam em [docs](./docs):
 
+- [ai-handoff.md](./docs/ai-handoff.md): contexto para outra IA continuar a mentoria.
 - [learning-log.md](./docs/learning-log.md): registro do que ja foi estudado.
 - [review-notes.md](./docs/review-notes.md): erros recorrentes, boas decisoes e pontos de melhoria.
 - [interview-questions.md](./docs/interview-questions.md): perguntas de revisao e entrevista.
@@ -175,4 +176,3 @@ Pontos de reforco:
 - testes automatizados;
 - organizacao profissional;
 - explicacao de decisoes tecnicas sem depender de IA.
-

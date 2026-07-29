@@ -29,4 +29,4 @@ Assuntos que precisam de reforco:
 | Data | Projeto | Assunto | Observacoes |
 |---|---|---|---|
 | 2026-07-29 | Trilha geral | Planejamento | Roadmap criado e estrutura do repositorio preparada. |
-
+| 2026-07-29 | Trilha geral | Handoff | Criado arquivo docs/ai-handoff.md para permitir retomada da mentoria em outro PC ou com outra IA. |
