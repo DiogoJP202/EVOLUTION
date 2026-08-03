@@ -1,6 +1,18 @@
-@TaskManager.Api_HostAddress = http://localhost:5240
+@host = http://localhost:5240
 
-GET {{TaskManager.Api_HostAddress}}/weatherforecast/
+GET {{host}}/api/tasks
+Content-Type: application/json
 Accept: application/json
+
+###
+
+POST {{host}}/api/tasks
+Content-Type: application/json
+Accept: application/json
+
+{
+    "title": "Estudar POST",
+    "description": "Criar primeira tarefa usando arquivo .http"
+}
 
 ###

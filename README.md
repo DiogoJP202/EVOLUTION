@@ -8,7 +8,7 @@ Este espaco sera usado para separar os projetos da trilha, registrar progresso, 
 
 ![Barra de progresso animada](./assets/progress.svg)
 
-> Status inicial: trilha criada, primeiro projeto ainda nao iniciado.
+> Status atual: Projeto 01 em andamento. API ja possui Controllers, model `TaskItem`, enum de status, DTO de criacao, listagem em memoria e criacao via POST.
 
 ## Objetivo
 
@@ -40,7 +40,7 @@ Cada etapa seguira este ciclo:
 
 | Ordem | Projeto | Foco principal | Status | Pasta |
 |---:|---|---|---|---|
-| 01 | TaskManager API | ASP.NET Core Web API, REST, camadas, DI, validacoes, EF Core e testes | A iniciar | [projects/01-task-manager-api](./projects/01-task-manager-api) |
+| 01 | TaskManager API | ASP.NET Core Web API, REST, camadas, DI, validacoes, EF Core e testes | Em andamento | [projects/01-task-manager-api](./projects/01-task-manager-api) |
 | 02 | Controle Financeiro Pessoal | SQL, modelagem, relacionamentos, filtros e regras de negocio | Planejado | [projects/02-controle-financeiro-pessoal](./projects/02-controle-financeiro-pessoal) |
 | 03 | Biblioteca ou Estoque | CRUD profissional, busca, paginacao, status e historico | Planejado | [projects/03-biblioteca-ou-estoque](./projects/03-biblioteca-ou-estoque) |
 | 04 | Frontend Consumindo API | HTML, CSS, JavaScript/TypeScript, consumo de API e formularios | Planejado | [projects/04-frontend-consumindo-api](./projects/04-frontend-consumindo-api) |
@@ -176,3 +176,37 @@ Pontos de reforco:
 - testes automatizados;
 - organizacao profissional;
 - explicacao de decisoes tecnicas sem depender de IA.
+
+## Ponto Atual
+
+Ultima etapa concluida:
+
+- removido endpoint de template `/weatherforecast`;
+- configurado uso de Controllers com `AddControllers()` e `MapControllers()`;
+- criado endpoint `GET /api/health`;
+- criada model `TaskItem`;
+- criado enum `TaskItemStatus`;
+- criado DTO `CreateTaskItemRequest`;
+- criado `GET /api/tasks` usando lista estatica em memoria;
+- criado `POST /api/tasks` retornando `201 Created`;
+- configurado arquivo `.http` para testar `GET` e `POST`.
+
+Onde paramos:
+
+- proxima tarefa e validar manualmente o `Title` no `POST /api/tasks`;
+- caso `Title` seja nulo, vazio ou apenas espacos, a API deve retornar `400 Bad Request`;
+- depois disso, revisar a diferenca entre validacao manual na Controller e validacao por atributos no DTO.
+
+Pendencias planejadas do Projeto 01:
+
+- implementar validacao de entrada;
+- criar `GET /api/tasks/{id}`;
+- melhorar retorno `Created` para apontar para o endpoint de busca por id;
+- criar `PUT` ou `PATCH` para atualizar tarefas;
+- criar endpoint para concluir tarefa;
+- criar `DELETE`;
+- filtrar por status;
+- separar Controller, Service e Repository;
+- trocar lista em memoria por Entity Framework Core;
+- adicionar testes unitarios e testes de integracao;
+- adicionar tratamento de erros e logging.
