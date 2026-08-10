@@ -8,7 +8,7 @@ Este espaco sera usado para separar os projetos da trilha, registrar progresso, 
 
 ![Barra de progresso animada](./assets/progress.svg)
 
-> Status atual: Projeto 01 em andamento. API ja possui Controllers, model `TaskItem`, enum de status, DTO de criacao, listagem em memoria e criacao via POST.
+> Status atual: Projeto 01 em andamento. CRUD em memoria foi praticado na Controller, a extracao para Service foi iniciada e a proxima etapa e conectar a Controller ao `TaskItemService` via DI.
 
 ## Objetivo
 
@@ -187,26 +187,33 @@ Ultima etapa concluida:
 - criada model `TaskItem`;
 - criado enum `TaskItemStatus`;
 - criado DTO `CreateTaskItemRequest`;
-- criado `GET /api/tasks` usando lista estatica em memoria;
-- criado `POST /api/tasks` retornando `201 Created`;
-- configurado arquivo `.http` para testar `GET` e `POST`.
+- criado DTO `UpdateTaskItemRequest`;
+- criado `GET /api/tasks`;
+- criado `GET /api/tasks/{id}`;
+- criado `POST /api/tasks` com validacao manual de `Title`, `Trim()` e `CreatedAtAction`;
+- criado `PUT /api/tasks/{id}`;
+- criado `PATCH /api/tasks/{id}/complete`;
+- criado `PATCH /api/tasks/{id}/cancel`;
+- criado `DELETE /api/tasks/{id}`;
+- configurado arquivo `.http` para testar os endpoints principais;
+- criado `ServiceResult<T>` e `ServiceErrorType`;
+- criado inicio de `TaskItemService` com `GetAll()` e `GetById(int id)`;
+- registrado `TaskItemService` no `Program.cs` com `AddSingleton`.
 
 Onde paramos:
 
-- proxima tarefa e validar manualmente o `Title` no `POST /api/tasks`;
-- caso `Title` seja nulo, vazio ou apenas espacos, a API deve retornar `400 Bad Request`;
-- depois disso, revisar a diferenca entre validacao manual na Controller e validacao por atributos no DTO.
+- a Controller ja recebe `TaskItemService` via construtor, mas ainda nao foi migrada para usar o service nos endpoints;
+- o build esta falhando porque `TasksController` ainda referencia `_tasks` e `_nextId`, que sairam da Controller;
+- proxima etapa conceitual: revisar DI, `Singleton`, `Scoped` e `Transient`;
+- proxima tarefa tecnica: migrar primeiro `GET /api/tasks` e `GET /api/tasks/{id}` para usar `_taskItemService`.
 
 Pendencias planejadas do Projeto 01:
 
-- implementar validacao de entrada;
-- criar `GET /api/tasks/{id}`;
-- melhorar retorno `Created` para apontar para o endpoint de busca por id;
-- criar `PUT` ou `PATCH` para atualizar tarefas;
-- criar endpoint para concluir tarefa;
-- criar `DELETE`;
 - filtrar por status;
-- separar Controller, Service e Repository;
+- terminar extracao de regras para `TaskItemService`;
+- fazer a Controller traduzir `ServiceResult<T>` para respostas HTTP;
+- criar Repository;
+- separar acesso a dados da regra de negocio;
 - trocar lista em memoria por Entity Framework Core;
 - adicionar testes unitarios e testes de integracao;
 - adicionar tratamento de erros e logging.

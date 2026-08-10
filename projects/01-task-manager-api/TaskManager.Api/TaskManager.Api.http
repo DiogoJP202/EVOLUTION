@@ -6,6 +6,16 @@ Accept: application/json
 
 ###
 
+GET {{host}}/api/tasks/2
+Accept: application/json
+
+###
+
+GET {{host}}/api/tasks/999
+Accept: application/json
+
+###
+
 POST {{host}}/api/tasks
 Content-Type: application/json
 Accept: application/json
@@ -14,5 +24,120 @@ Accept: application/json
     "title": "Estudar POST",
     "description": "Criar primeira tarefa usando arquivo .http"
 }
+
+###
+POST {{host}}/api/tasks
+Content-Type: application/json
+Accept: application/json
+
+{
+  "title": "",
+  "description": "Sem titulo"
+}
+
+###
+POST {{host}}/api/tasks
+Content-Type: application/json
+Accept: application/json
+
+{
+  "title": "   ",
+  "description": "So espacos"
+}
+
+###
+POST {{host}}/api/tasks
+Content-Type: application/json
+Accept: application/json
+
+{
+  "title": "Estudar validacao",
+  "description": "Title valido"
+}
+
+###
+POST {{host}}/api/tasks
+Content-Type: application/json
+Accept: application/json
+
+{
+    "description": "Sem propriedade Title"
+}
+
+###
+POST {{host}}/api/tasks
+Content-Type: application/json
+Accept: application/json
+
+{
+  "title": "   Estudar trim   ",
+  "description": "Titulo com espacos nas pontas"
+}
+
+###
+PUT {{host}}/api/tasks/1
+Content-Type: application/json
+Accept: application/json
+
+{
+  "title": "Tarefa atualizada",
+  "description": "Descricao atualizada"
+}
+
+###
+PUT {{host}}/api/tasks/999
+Content-Type: application/json
+Accept: application/json
+
+{
+  "title": "Nao existe",
+  "description": "Tentativa invalida"
+}
+
+###
+PUT {{host}}/api/tasks/1
+Content-Type: application/json
+Accept: application/json
+
+{
+  "title": "   ",
+  "description": "Titulo invalido"
+}
+
+###
+PATCH {{host}}/api/tasks/1/complete
+Accept: application/json
+
+###
+PATCH {{host}}/api/tasks/999/complete
+Accept: application/json
+
+###
+PATCH {{host}}/api/tasks/2/cancel
+Accept: application/json
+
+###
+PATCH {{host}}/api/tasks/1/complete
+Accept: application/json
+
+###
+PATCH {{host}}/api/tasks/1/cancel
+Accept: application/json
+
+###
+PATCH {{host}}/api/tasks/999/cancel
+Accept: application/json
+
+###
+DELETE {{host}}/api/tasks/3
+Accept: application/json
+
+###
+GET {{host}}/api/tasks/3
+Accept: application/json
+
+###
+DELETE {{host}}/api/tasks/999
+Accept: application/json
 
 ###

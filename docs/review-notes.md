@@ -8,6 +8,7 @@ Este arquivo sera usado para registrar dificuldades, erros recorrentes, boas dec
 - Esquecer que `Task` ja existe em C# para programacao assincrona; por isso a entidade foi chamada de `TaskItem`.
 - Confundir campo de instancia com campo `static`; lista dentro da Controller sem `static` e recriada por instancia.
 - Assumir que `Id` e indice da lista sao equivalentes; isso quebra quando itens sao removidos, reordenados ou filtrados.
+- Iniciar uma extracao de Service removendo campos da Controller antes de migrar todos os usos; isso gerou erros `CS0103` para `_tasks` e `_nextId`.
 
 ## Boas decisoes
 
@@ -17,6 +18,9 @@ Este arquivo sera usado para registrar dificuldades, erros recorrentes, boas dec
 - Uso de `CompletedAt` como `DateTime?`, pois tarefa pendente ainda nao tem data de conclusao.
 - Troca de `DateTime.Now` por `DateTime.UtcNow` para evitar dependencia do fuso horario da maquina.
 - Retornar a variavel `newTask` no `POST` em vez de buscar a tarefa criada por indice na lista.
+- Usar `CreatedAtAction` depois de criar `GetById`, conectando o `Location` do `POST` a uma action real.
+- Criar endpoints de dominio separados para `complete` e `cancel`, em vez de deixar o cliente alterar `Status` livremente.
+- Escolher `ServiceResult<T>` para separar resultado de negocio de resposta HTTP.
 
 ## Pontos para revisar depois
 
@@ -30,3 +34,7 @@ Este arquivo sera usado para registrar dificuldades, erros recorrentes, boas dec
 - `201 Created` vs `200 OK`;
 - validacao manual vs validacao por atributos.
 - warning `NU1903` do pacote `Microsoft.OpenApi` 2.0.0 gerado pelo template.
+- DI container;
+- `Singleton`, `Scoped` e `Transient`;
+- diferenca entre retornar dados na Service e retornar `IActionResult` na Controller;
+- traducao de `ServiceResult<T>` para `Ok`, `NotFound`, `BadRequest` e `NoContent`.

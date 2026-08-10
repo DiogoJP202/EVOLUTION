@@ -4,7 +4,7 @@ Este documento existe para permitir que outra IA continue a mentoria de onde ela
 
 ## Estado atual
 
-Data do registro: 2026-08-03
+Data do registro: 2026-08-10
 
 Repositorio: ProjetoCSharp
 
@@ -35,36 +35,61 @@ Objetivo do repositorio:
 - Criado `TasksController`.
 - Criado `GET /api/tasks` com lista estatica em memoria.
 - Criado `POST /api/tasks` com retorno `201 Created`.
-- Configurado `TaskManager.Api.http` para testar `GET` e `POST`.
+- Criada validacao manual de `Title` com `string.IsNullOrWhiteSpace`.
+- Adicionado `Trim()` no titulo salvo.
+- Criado `GET /api/tasks/{id}`.
+- Ajustado `POST /api/tasks` para usar `CreatedAtAction(nameof(GetById), new { id = newTask.Id }, newTask)`.
+- Criado DTO `UpdateTaskItemRequest`.
+- Criado `PUT /api/tasks/{id}`.
+- Criado `PATCH /api/tasks/{id}/complete`.
+- Criado `PATCH /api/tasks/{id}/cancel`.
+- Criado `DELETE /api/tasks/{id}`.
+- Configurado `TaskManager.Api.http` para testar os endpoints principais.
+- Criado `ServiceErrorType`.
+- Criado `ServiceResult<T>`.
+- Criado inicio de `TaskItemService` com lista em memoria, `GetAll()` e `GetById(int id)`.
+- Registrado `TaskItemService` no `Program.cs` com `AddSingleton`.
 
 ## Onde o aluno parou
 
 - O Projeto 01 esta em andamento.
-- O aluno acabou de implementar `POST /api/tasks`.
-- O `POST` cria uma nova `TaskItem`, adiciona na lista estatica `_tasks` e retorna `201 Created`.
-- Ainda nao existe validacao para `Title`.
-- Ainda nao existe `GET /api/tasks/{id}`.
-- Ainda nao existe Service, Repository, banco de dados ou testes.
+- O aluno implementou o CRUD em memoria na Controller e endpoints de dominio para concluir/cancelar tarefa.
+- O aluno comecou a extrair a logica para `TaskItemService`.
+- `TaskItemService` ja existe e possui `GetAll()` e `GetById(int id)`.
+- `TasksController` ja recebe `TaskItemService` via construtor.
+- `Program.cs` ja registra `TaskItemService` com `AddSingleton`.
+- O projeto esta em estado WIP e o build esta falhando.
+- Motivo da falha: `TasksController` ainda referencia `_tasks` e `_nextId`, mas esses campos foram removidos da Controller.
+- Ainda nao existe Repository, banco de dados ou testes.
 - O aluno quer escrever o codigo por conta propria.
 - A IA deve explicar conceitos antes da tarefa, fazer perguntas de entendimento e depois pedir a implementacao.
 
 ## Proximo passo sugerido
 
-1. Pedir para o aluno implementar validacao manual no `POST /api/tasks`:
+1. Retomar pela revisao conceitual de DI:
 
-- usar `string.IsNullOrWhiteSpace(request.Title)`;
-- retornar `BadRequest(...)` quando `Title` for nulo, vazio ou apenas espacos;
-- manter fluxo normal quando `Title` for valido.
+- o que e o container de DI;
+- diferenca entre `Singleton`, `Scoped` e `Transient`;
+- por que `Singleton` foi escolhido agora para a lista em memoria;
+- por que `DbContext` futuramente tende a ser `Scoped`.
 
-2. Pedir para ele testar estes cenarios no `.http`:
+2. Corrigir a migracao parcial sem entregar tudo pronto:
 
-- `title` vazio;
-- `title` contendo apenas espacos;
-- `title` valido.
+- pedir para o aluno olhar os erros `CS0103` do build;
+- perguntar onde `_tasks` e `_nextId` estao agora;
+- guiar a migracao de `GET /api/tasks` para `_taskItemService.GetAll()`;
+- guiar a migracao de `GET /api/tasks/{id}` para `_taskItemService.GetById(id)`;
+- pedir novo `dotnet build`.
 
-3. Pedir para ele explicar por que `IsNullOrWhiteSpace` e melhor do que comparar apenas com `""`.
+3. Depois migrar um metodo por vez para a Service:
 
-4. Depois da validacao, proximo assunto natural: `GET /api/tasks/{id}` e `CreatedAtAction`.
+- `Create`;
+- `Update`;
+- `Complete`;
+- `Cancel`;
+- `Delete`.
+
+4. Somente depois discutir Repository e interface.
 
 ## Perfil atual do aluno
 
@@ -105,6 +130,23 @@ Nivel estimado informado pelo aluno: 2,5 de 5.
 - `POST` com body JSON.
 - `201 Created` vs `200 OK`.
 - Uso basico de arquivo `.http`.
+- Guard clauses.
+- `string.IsNullOrWhiteSpace`.
+- `Trim()`.
+- Parametro de rota `{id}`.
+- Model binding.
+- LINQ com `FirstOrDefault`.
+- `NotFound`, `BadRequest`, `Ok` e `NoContent`.
+- `CreatedAtAction`.
+- Objeto anonimo `new { id = newTask.Id }`.
+- `PUT` vs `PATCH`.
+- Acoes de dominio como `complete` e `cancel`.
+- `DELETE` com `204 No Content`.
+- Generics com `<T>`.
+- `ServiceResult<T>`.
+- `ServiceErrorType`.
+- Inicio de injecao de dependencia.
+- `Singleton`, `Scoped` e `Transient`.
 
 ## Pontos que precisam ser revisados
 
@@ -114,6 +156,10 @@ Nivel estimado informado pelo aluno: 2,5 de 5.
 - Por que `Id` nao deve ser tratado como indice de lista.
 - Validacao manual vs validacao por atributos.
 - Responsabilidades futuras de Controller, Service e Repository.
+- A migracao para Service deve ser feita aos poucos para manter o build verde.
+- `TasksController` atualmente nao compila por ainda usar `_tasks` e `_nextId`.
+- `ServiceResult<T>.Ok` deve preencher `ErrorType = ServiceErrorType.None` para manter consistencia.
+- `TaskItemService._nextId` existe, mas ainda nao e usado enquanto apenas `GetAll` e `GetById` foram extraidos.
 
 ## Regras importantes para a IA
 

@@ -44,32 +44,47 @@ Em andamento.
 - `TasksController` criado.
 - `GET /api/tasks` lista tarefas em memoria.
 - `POST /api/tasks` cria tarefas em memoria e retorna `201 Created`.
+- `POST /api/tasks` valida `Title` manualmente com `IsNullOrWhiteSpace`.
+- `POST /api/tasks` normaliza `Title` com `Trim()`.
+- `POST /api/tasks` usa `CreatedAtAction` apontando para `GetById`.
+- `GET /api/tasks/{id}` busca tarefa por id e retorna `404` quando nao encontra.
+- DTO `UpdateTaskItemRequest` criado.
+- `PUT /api/tasks/{id}` atualiza titulo e descricao.
+- `PATCH /api/tasks/{id}/complete` conclui uma tarefa e preenche `CompletedAt`.
+- `PATCH /api/tasks/{id}/cancel` cancela uma tarefa.
+- `DELETE /api/tasks/{id}` remove uma tarefa e retorna `204 No Content`.
+- `ServiceResult<T>` e `ServiceErrorType` criados.
+- `TaskItemService` iniciado com `GetAll()` e `GetById(int id)`.
+- `TaskItemService` registrado no container de DI com `AddSingleton`.
 - Arquivo `TaskManager.Api.http` configurado para testar a API.
 
 ## Onde paramos
 
-O ultimo assunto estudado foi criacao de tarefas com `POST /api/tasks`, DTO de entrada e retorno `201 Created`.
+O ultimo assunto estudado foi injecao de dependencia e inicio da extracao da logica da Controller para `TaskItemService`.
 
-A proxima tarefa e validar o campo `Title` no `POST`:
+Estado tecnico atual:
 
-- se `Title` for nulo, vazio ou apenas espacos, retornar `400 Bad Request`;
-- se `Title` for valido, criar a tarefa normalmente;
-- usar `string.IsNullOrWhiteSpace(request.Title)` para entender validacao manual antes de usar atributos no DTO.
+- `Program.cs` registra `TaskItemService` com `builder.Services.AddSingleton<TaskItemService>();`;
+- `TasksController` recebe `TaskItemService` no construtor;
+- `TaskItemService` possui a lista em memoria e os metodos `GetAll()` e `GetById(int id)`;
+- a Controller ainda nao foi migrada para usar `_taskItemService` nos endpoints;
+- o build esta falhando porque `TasksController` ainda referencia `_tasks` e `_nextId`, que nao existem mais na Controller.
 
 ## Pendencias proximas
 
-- Validar `Title` manualmente na Controller.
-- Testar payloads invalidos no `.http`.
-- Criar endpoint `GET /api/tasks/{id}`.
-- Trocar `Created($"api/tasks/{id}", task)` por `CreatedAtAction` quando existir busca por id.
-- Discutir por que a lista estatica e temporaria e nao e arquitetura final.
+- Revisar DI, container, `Singleton`, `Scoped` e `Transient`.
+- Migrar `GET /api/tasks` para usar `_taskItemService.GetAll()`.
+- Migrar `GET /api/tasks/{id}` para usar `_taskItemService.GetById(id)`.
+- Criar um helper ou bloco simples na Controller para traduzir `ServiceErrorType.NotFound` em `NotFound(...)`.
+- Depois migrar `Create`, `Update`, `Complete`, `Cancel` e `Delete` para o service, um por vez.
+- Rodar `dotnet build` novamente apos cada pequena migracao.
 - Acompanhar o warning `NU1903` do pacote `Microsoft.OpenApi` 2.0.0 apontado pelo `dotnet build`.
 
 ## Pendencias futuras
 
-- Separar responsabilidades em Service e Repository.
+- Finalizar separacao de responsabilidades entre Controller e Service.
+- Criar Repository para remover armazenamento da Service.
 - Criar interfaces para abstrair comportamento.
-- Introduzir injecao de dependencia.
 - Persistir dados com Entity Framework Core.
 - Criar validacoes mais robustas.
 - Adicionar tratamento global de erros.

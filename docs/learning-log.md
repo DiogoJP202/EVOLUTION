@@ -34,3 +34,6 @@ Assuntos que precisam de reforco:
 | 2026-08-03 | TaskManager API | Models | Criados `TaskItem` e `TaskItemStatus`; revisados nullable reference types, enum, `DateTime.UtcNow` e `DateTime?`. |
 | 2026-08-03 | TaskManager API | GET e POST | Criado `TasksController` com lista estatica em memoria, `GET /api/tasks`, DTO `CreateTaskItemRequest` e `POST /api/tasks` retornando `201 Created`. |
 | 2026-08-03 | TaskManager API | Onde paramos | Proxima tarefa: validar manualmente `Title` no `POST`, retornando `400 Bad Request` para valores nulos, vazios ou apenas espacos. |
+| 2026-08-10 | TaskManager API | CRUD em memoria | Implementados busca por id, validacao de criacao, update, complete, cancel e delete na Controller. |
+| 2026-08-10 | TaskManager API | ServiceResult e DI | Criados `ServiceResult<T>`, `ServiceErrorType` e inicio de `TaskItemService`; registrado service com `AddSingleton`. |
+| 2026-08-10 | TaskManager API | Onde paramos | Build falha porque `TasksController` ja recebe `TaskItemService`, mas ainda referencia `_tasks` e `_nextId`; proxima etapa e migrar `GET` e `GetById` para o service. |
