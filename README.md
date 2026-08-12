@@ -8,7 +8,7 @@ Este espaco sera usado para separar os projetos da trilha, registrar progresso, 
 
 ![Barra de progresso animada](./assets/progress.svg)
 
-> Status atual: Projeto 01 em andamento. CRUD em memoria foi praticado na Controller, a extracao para Service foi iniciada e a proxima etapa e conectar a Controller ao `TaskItemService` via DI.
+> Status atual: Projeto 01 em andamento. CRUD em memoria foi migrado para `TaskItemService`, o acesso aos dados foi isolado em `TaskItemRepository` e a Service agora depende da interface `ITaskItemRepository`.
 
 ## Objetivo
 
@@ -197,23 +197,24 @@ Ultima etapa concluida:
 - criado `DELETE /api/tasks/{id}`;
 - configurado arquivo `.http` para testar os endpoints principais;
 - criado `ServiceResult<T>` e `ServiceErrorType`;
-- criado inicio de `TaskItemService` com `GetAll()` e `GetById(int id)`;
-- registrado `TaskItemService` no `Program.cs` com `AddSingleton`.
+- criado `TaskItemService` com os casos de uso principais;
+- criada `TaskItemRepository` para armazenar dados em memoria;
+- criada interface `ITaskItemRepository`;
+- configurada DI para resolver `ITaskItemRepository` como `TaskItemRepository`;
+- build e teste basico funcionando, com warning conhecido `NU1903` do pacote `Microsoft.OpenApi`.
 
 Onde paramos:
 
-- a Controller ja recebe `TaskItemService` via construtor, mas ainda nao foi migrada para usar o service nos endpoints;
-- o build esta falhando porque `TasksController` ainda referencia `_tasks` e `_nextId`, que sairam da Controller;
-- proxima etapa conceitual: revisar DI, `Singleton`, `Scoped` e `Transient`;
-- proxima tarefa tecnica: migrar primeiro `GET /api/tasks` e `GET /api/tasks/{id}` para usar `_taskItemService`.
+- a Controller usa `TaskItemService` e traduz `ServiceResult<T>` para respostas HTTP;
+- a Service conhece regras de negocio e depende de `ITaskItemRepository`;
+- a Repository conhece a lista em memoria e o controle de ids;
+- proxima etapa conceitual: revisar interface, classe concreta, abstracao e inversao de dependencia;
+- proxima tarefa tecnica: testar todos os endpoints pelo arquivo `.http` e revisar responsabilidades das camadas.
 
 Pendencias planejadas do Projeto 01:
 
 - filtrar por status;
-- terminar extracao de regras para `TaskItemService`;
-- fazer a Controller traduzir `ServiceResult<T>` para respostas HTTP;
-- criar Repository;
-- separar acesso a dados da regra de negocio;
+- revisar repeticao de traducao de `ServiceResult<T>` na Controller;
 - trocar lista em memoria por Entity Framework Core;
 - adicionar testes unitarios e testes de integracao;
 - adicionar tratamento de erros e logging.

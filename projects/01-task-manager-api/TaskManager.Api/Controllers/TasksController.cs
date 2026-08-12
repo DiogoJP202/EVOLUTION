@@ -19,107 +19,134 @@ public class TasksController : ControllerBase
     [HttpGet]
     public IActionResult Get()
     {
-        return Ok(_tasks);
+        ServiceResult<List<TaskItem>> result = _taskItemService.GetAll();
+
+        if (result.Success)
+        {
+            return Ok(result.Data);
+        }
+        else
+        {
+             return StatusCode(500, new { erro = result.ErrorMessage });
+        }
     }
 
     [HttpGet("{id}")]
     public IActionResult GetById(int id)
     {
-        TaskItem? task = _tasks.FirstOrDefault(task => task.Id == id);
+        ServiceResult<TaskItem> result = _taskItemService.GetById(id);
 
-        if (task == null)
-            return NotFound($"Task with id {id} wasn't found.");
+        if (result.Success)
+        {
+            return Ok(result.Data);
+        }
+        else
+        {
+            if (result.ErrorType == ServiceErrorType.NotFound)
+                return NotFound(result.ErrorMessage);
 
-        return Ok(task);
+            return StatusCode(500, new { erro = result.ErrorMessage });
+        }
     }
 
     [HttpPost]
     public IActionResult Post(CreateTaskItemRequest request)
     {
-        if (string.IsNullOrWhiteSpace(request.Title))
+        ServiceResult<TaskItem> result = _taskItemService.Create(request);
+
+        if (result.Success)
         {
-            return BadRequest("Title is required.");
+            return CreatedAtAction(nameof(GetById), new { id = result.Data!.Id }, result.Data);
+        }
+        else
+        {
+            if (result.ErrorType == ServiceErrorType.Validation)
+                return BadRequest(result.ErrorMessage);
+
+            return StatusCode(500, new { error = result.ErrorMessage });
         }
 
-        _nextId += 1;
-
-        TaskItem newTask = new(){
-            Id = _nextId,
-            Title =  request.Title.Trim(),
-            Description = request.Description,
-        };
-
-        _tasks.Add(newTask);
-        return CreatedAtAction(nameof(GetById), new { id = newTask.Id }, newTask);
     }
 
     [HttpPut("{id}")]
     public IActionResult Put(int id, UpdateTaskItemRequest request)
     // Quando existe um objeto complexo no como parâmetro o ASP.NET automáticamente supoe que ele é o body.
     {
-        TaskItem? task = _tasks.FirstOrDefault(task => task.Id == id);
+        ServiceResult<TaskItem> result = _taskItemService.Update(id, request);
 
-        if (task == null)
-            return NotFound("Task wasn't found.");
+        if (result.Success)
+        {
+            return Ok(result.Data);
+        }
+        else
+        {
+            if (result.ErrorType == ServiceErrorType.NotFound)
+                return NotFound(result.ErrorMessage);
 
-        if (string.IsNullOrWhiteSpace(request.Title))
-            return BadRequest("Title is required.");
+            if (result.ErrorType == ServiceErrorType.Validation)
+                return BadRequest(result.ErrorMessage);
 
-        task.Title = request.Title.Trim();
-        task.Description = request.Description?.Trim();
-
-        return Ok(task);
+            return StatusCode(500, new { erro = result.ErrorMessage });
+        }
     }
 
     [HttpPatch("{id}/complete")]
     public IActionResult Complete(int id)
     {
-        TaskItem? task = _tasks.FirstOrDefault(t => t.Id == id);
+        ServiceResult<TaskItem> result = _taskItemService.Complete(id);
 
-        if (task == null)
-            return NotFound("Task wasn't found.");
+        if (result.Success)
+        {
+            return Ok(result.Data);
+        }
+        else
+        {
+            if (result.ErrorType == ServiceErrorType.NotFound)
+                return NotFound(result.ErrorMessage);
 
-        if (task.Status == TaskItemStatus.Completed)
-            return BadRequest("Task is completed already.");
+            if (result.ErrorType == ServiceErrorType.Conflict)
+                return Conflict(result.ErrorMessage);
 
-        if (task.Status == TaskItemStatus.Canceled)
-            return BadRequest("You can't complete a task already canceled.");
-
-        task.Status = TaskItemStatus.Completed;
-        task.CompletedAt = DateTime.UtcNow;
-
-        return Ok(task);
+            return StatusCode(500, new { error = result.ErrorMessage });
+        }
     }
 
     [HttpPatch("{id}/cancel")]
     public IActionResult Cancel(int id)
     {
-        TaskItem? task = _tasks.FirstOrDefault(t => t.Id == id);
+        ServiceResult<TaskItem> result = _taskItemService.Cancel(id);
 
-        if (task == null)
-            return NotFound("Task wasn't found.");
+        if (result.Success)
+        {
+            return Ok(result.Data);
+        }
+        else
+        {
+            if (result.ErrorType == ServiceErrorType.NotFound)
+                return NotFound(result.ErrorMessage);
 
-        if (task.Status == TaskItemStatus.Canceled)
-            return BadRequest("Task is canceled already.");
+            if (result.ErrorType == ServiceErrorType.Conflict)
+                return Conflict(result.ErrorMessage);
 
-        if (task.Status == TaskItemStatus.Completed)
-            return BadRequest("You can't cancel a task already completed.");
-
-        task.Status = TaskItemStatus.Canceled;
-
-        return Ok(task);
+            return StatusCode(500, new { erro = result.ErrorMessage });
+        }
     }
 
     [HttpDelete("{id}")]
     public IActionResult Delete(int id)
     {
-        TaskItem? task = _tasks.FirstOrDefault(t => t.Id == id);
+        ServiceResult<bool> result = _taskItemService.Delete(id);
 
-        if (task == null)
-            return NotFound("Task wasn't found.");
+        if (result.Success)
+        {
+            return NoContent();
+        }
+        else
+        {
+            if (result.ErrorType == ServiceErrorType.NotFound)
+                return NotFound(result.ErrorMessage);
 
-        _tasks.Remove(task);
-
-        return NoContent();
+            return StatusCode(500, new { error = result.ErrorMessage });
+        }
     }
 }

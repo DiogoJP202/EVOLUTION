@@ -9,6 +9,7 @@ Este arquivo sera usado para registrar dificuldades, erros recorrentes, boas dec
 - Confundir campo de instancia com campo `static`; lista dentro da Controller sem `static` e recriada por instancia.
 - Assumir que `Id` e indice da lista sao equivalentes; isso quebra quando itens sao removidos, reordenados ou filtrados.
 - Iniciar uma extracao de Service removendo campos da Controller antes de migrar todos os usos; isso gerou erros `CS0103` para `_tasks` e `_nextId`.
+- Achar que build verde sempre significa arquitetura correta; no caso da interface, o build passava mesmo quando a Service ainda dependia da classe concreta.
 
 ## Boas decisoes
 
@@ -21,6 +22,10 @@ Este arquivo sera usado para registrar dificuldades, erros recorrentes, boas dec
 - Usar `CreatedAtAction` depois de criar `GetById`, conectando o `Location` do `POST` a uma action real.
 - Criar endpoints de dominio separados para `complete` e `cancel`, em vez de deixar o cliente alterar `Status` livremente.
 - Escolher `ServiceResult<T>` para separar resultado de negocio de resposta HTTP.
+- Migrar a logica de negocio da Controller para `TaskItemService`.
+- Criar `TaskItemRepository` para isolar o acesso aos dados em memoria.
+- Criar `ITaskItemRepository` e fazer a Service depender da abstracao.
+- Registrar `ITaskItemRepository` apontando para `TaskItemRepository` no `Program.cs`.
 
 ## Pontos para revisar depois
 
@@ -38,3 +43,8 @@ Este arquivo sera usado para registrar dificuldades, erros recorrentes, boas dec
 - `Singleton`, `Scoped` e `Transient`;
 - diferenca entre retornar dados na Service e retornar `IActionResult` na Controller;
 - traducao de `ServiceResult<T>` para `Ok`, `NotFound`, `BadRequest` e `NoContent`.
+- interfaces como contratos;
+- diferenca entre depender de classe concreta e depender de abstracao;
+- `AddSingleton<ITaskItemRepository, TaskItemRepository>()`;
+- Dependency Inversion Principle, o `D` do SOLID;
+- quando usar `Conflict` para conflito de regra/estado.

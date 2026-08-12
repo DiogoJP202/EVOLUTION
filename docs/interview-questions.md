@@ -14,7 +14,20 @@ Este arquivo guardara perguntas curtas para revisar conceitos aprendidos.
 - Qual a responsabilidade de um Controller?
 - Qual a diferenca entre GET, POST, PUT, PATCH e DELETE?
 - O que significa uma API ser REST?
-- Quando retornar 200, 201, 400, 404 e 500?
+- Quando retornar 200, 201, 204, 400, 404, 409 e 500?
+
+## Arquitetura e DI
+
+- Qual a responsabilidade de uma Service?
+- Qual a responsabilidade de uma Repository?
+- Por que a Controller nao deveria conter regra de negocio?
+- O que e o container de injecao de dependencia?
+- Qual a diferenca entre `Singleton`, `Scoped` e `Transient`?
+- Qual a diferenca entre interface e classe concreta?
+- O que significa registrar `ITaskItemRepository` apontando para `TaskItemRepository`?
+- Por que depender de uma abstracao facilita trocar uma repository em memoria por uma repository com banco?
+- O que o `D` do SOLID quer dizer na pratica?
+- Por que `ServiceResult<T>` nao deve retornar `IActionResult`?
 
 ## Banco de Dados
 
@@ -27,4 +40,3 @@ Este arquivo guardara perguntas curtas para revisar conceitos aprendidos.
 - O que e um teste unitario?
 - O que e um teste de integracao?
 - Por que testar regra de negocio no Service costuma ser mais simples do que testar direto no Controller?
-

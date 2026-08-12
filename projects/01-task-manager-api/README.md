@@ -54,37 +54,40 @@ Em andamento.
 - `PATCH /api/tasks/{id}/cancel` cancela uma tarefa.
 - `DELETE /api/tasks/{id}` remove uma tarefa e retorna `204 No Content`.
 - `ServiceResult<T>` e `ServiceErrorType` criados.
-- `TaskItemService` iniciado com `GetAll()` e `GetById(int id)`.
+- `TaskItemService` criado com `GetAll`, `GetById`, `Create`, `Update`, `Complete`, `Cancel` e `Delete`.
 - `TaskItemService` registrado no container de DI com `AddSingleton`.
+- `TaskItemRepository` criado para concentrar a lista em memoria e o controle de ids.
+- Interface `ITaskItemRepository` criada.
+- `TaskItemRepository` implementa `ITaskItemRepository`.
+- `TaskItemService` depende de `ITaskItemRepository`.
+- `Program.cs` registra `ITaskItemRepository` apontando para `TaskItemRepository`.
 - Arquivo `TaskManager.Api.http` configurado para testar a API.
 
 ## Onde paramos
 
-O ultimo assunto estudado foi injecao de dependencia e inicio da extracao da logica da Controller para `TaskItemService`.
+O ultimo assunto estudado foi interface aplicada a Repository e injecao de dependencia usando abstracao.
 
 Estado tecnico atual:
 
 - `Program.cs` registra `TaskItemService` com `builder.Services.AddSingleton<TaskItemService>();`;
+- `Program.cs` registra `ITaskItemRepository` com `builder.Services.AddSingleton<ITaskItemRepository, TaskItemRepository>();`;
 - `TasksController` recebe `TaskItemService` no construtor;
-- `TaskItemService` possui a lista em memoria e os metodos `GetAll()` e `GetById(int id)`;
-- a Controller ainda nao foi migrada para usar `_taskItemService` nos endpoints;
-- o build esta falhando porque `TasksController` ainda referencia `_tasks` e `_nextId`, que nao existem mais na Controller.
+- `TaskItemService` executa as regras de negocio e retorna `ServiceResult<T>`;
+- `TaskItemRepository` possui a lista em memoria, busca por id, adicao, remocao e geracao de ids;
+- `TasksController` traduz os resultados da Service para respostas HTTP;
+- o build esta passando, com o warning conhecido `NU1903` do pacote `Microsoft.OpenApi`.
 
 ## Pendencias proximas
 
-- Revisar DI, container, `Singleton`, `Scoped` e `Transient`.
-- Migrar `GET /api/tasks` para usar `_taskItemService.GetAll()`.
-- Migrar `GET /api/tasks/{id}` para usar `_taskItemService.GetById(id)`.
-- Criar um helper ou bloco simples na Controller para traduzir `ServiceErrorType.NotFound` em `NotFound(...)`.
-- Depois migrar `Create`, `Update`, `Complete`, `Cancel` e `Delete` para o service, um por vez.
-- Rodar `dotnet build` novamente apos cada pequena migracao.
+- Revisar interface, implementacao concreta e inversao de dependencia.
+- Testar todos os endpoints pelo arquivo `.http` apos a criacao da interface.
+- Revisar responsabilidades atuais entre Controller, Service e Repository.
+- Avaliar, sem pressa, uma pequena refatoracao para reduzir repeticao na traducao de `ServiceResult<T>` dentro da Controller.
+- Rodar `dotnet build` apos cada pequena mudanca.
 - Acompanhar o warning `NU1903` do pacote `Microsoft.OpenApi` 2.0.0 apontado pelo `dotnet build`.
 
 ## Pendencias futuras
 
-- Finalizar separacao de responsabilidades entre Controller e Service.
-- Criar Repository para remover armazenamento da Service.
-- Criar interfaces para abstrair comportamento.
 - Persistir dados com Entity Framework Core.
 - Criar validacoes mais robustas.
 - Adicionar tratamento global de erros.

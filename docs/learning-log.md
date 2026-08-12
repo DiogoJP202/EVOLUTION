@@ -37,3 +37,7 @@ Assuntos que precisam de reforco:
 | 2026-08-10 | TaskManager API | CRUD em memoria | Implementados busca por id, validacao de criacao, update, complete, cancel e delete na Controller. |
 | 2026-08-10 | TaskManager API | ServiceResult e DI | Criados `ServiceResult<T>`, `ServiceErrorType` e inicio de `TaskItemService`; registrado service com `AddSingleton`. |
 | 2026-08-10 | TaskManager API | Onde paramos | Build falha porque `TasksController` ja recebe `TaskItemService`, mas ainda referencia `_tasks` e `_nextId`; proxima etapa e migrar `GET` e `GetById` para o service. |
+| 2026-08-12 | TaskManager API | Service completa | Migrados `GetAll`, `GetById`, `Create`, `Update`, `Complete`, `Cancel` e `Delete` para `TaskItemService`; Controller passou a traduzir `ServiceResult<T>` para respostas HTTP. |
+| 2026-08-12 | TaskManager API | Repository | Criado `TaskItemRepository` para concentrar lista em memoria, busca por id, adicao, remocao e geracao de ids. |
+| 2026-08-12 | TaskManager API | Interface e DI | Criada `ITaskItemRepository`; `TaskItemService` passou a depender da interface e `Program.cs` passou a registrar `ITaskItemRepository -> TaskItemRepository`. |
+| 2026-08-12 | TaskManager API | Onde paramos | Build e teste basico funcionaram. Proxima etapa: revisar se Controller, Service e Repository estao com responsabilidades claras e testar todos os endpoints pelo `.http`. |

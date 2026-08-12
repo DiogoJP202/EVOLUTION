@@ -12,6 +12,7 @@ public class ServiceResult<T>
         return new ServiceResult<T> {
           Success = true,
           Data = data, 
+          ErrorType = ServiceErrorType.None
         };
     }
 

@@ -4,7 +4,7 @@ Este documento existe para permitir que outra IA continue a mentoria de onde ela
 
 ## Estado atual
 
-Data do registro: 2026-08-10
+Data do registro: 2026-08-12
 
 Repositorio: ProjetoCSharp
 
@@ -47,49 +47,66 @@ Objetivo do repositorio:
 - Configurado `TaskManager.Api.http` para testar os endpoints principais.
 - Criado `ServiceErrorType`.
 - Criado `ServiceResult<T>`.
-- Criado inicio de `TaskItemService` com lista em memoria, `GetAll()` e `GetById(int id)`.
+- Criado `TaskItemService` com os casos de uso principais.
 - Registrado `TaskItemService` no `Program.cs` com `AddSingleton`.
+- Criado `TaskItemRepository` para concentrar o armazenamento em memoria.
+- Criada interface `ITaskItemRepository`.
+- `TaskItemRepository` implementa `ITaskItemRepository`.
+- `TaskItemService` passou a depender de `ITaskItemRepository`, nao da classe concreta.
+- Registrado `ITaskItemRepository` no container de DI apontando para `TaskItemRepository`.
+- Build voltou a ficar verde, restando apenas o warning `NU1903` do pacote `Microsoft.OpenApi`.
 
 ## Onde o aluno parou
 
 - O Projeto 01 esta em andamento.
-- O aluno implementou o CRUD em memoria na Controller e endpoints de dominio para concluir/cancelar tarefa.
-- O aluno comecou a extrair a logica para `TaskItemService`.
-- `TaskItemService` ja existe e possui `GetAll()` e `GetById(int id)`.
+- O aluno implementou o CRUD em memoria e endpoints de dominio para concluir/cancelar tarefa.
+- A logica foi extraida da Controller para `TaskItemService`.
+- `TaskItemService` ja possui `GetAll`, `GetById`, `Create`, `Update`, `Complete`, `Cancel` e `Delete`.
 - `TasksController` ja recebe `TaskItemService` via construtor.
 - `Program.cs` ja registra `TaskItemService` com `AddSingleton`.
-- O projeto esta em estado WIP e o build esta falhando.
-- Motivo da falha: `TasksController` ainda referencia `_tasks` e `_nextId`, mas esses campos foram removidos da Controller.
-- Ainda nao existe Repository, banco de dados ou testes.
+- `TaskItemRepository` ja existe e guarda a lista estatica em memoria e o controle de proximo id.
+- `ITaskItemRepository` ja existe como contrato da repository.
+- `Program.cs` registra `builder.Services.AddSingleton<ITaskItemRepository, TaskItemRepository>();`.
+- O build esta passando com warning conhecido `NU1903`.
+- Ainda nao existe banco de dados ou testes automatizados.
 - O aluno quer escrever o codigo por conta propria.
 - A IA deve explicar conceitos antes da tarefa, fazer perguntas de entendimento e depois pedir a implementacao.
 
 ## Proximo passo sugerido
 
-1. Retomar pela revisao conceitual de DI:
+1. Retomar pela revisao conceitual de interfaces e DI:
 
-- o que e o container de DI;
-- diferenca entre `Singleton`, `Scoped` e `Transient`;
-- por que `Singleton` foi escolhido agora para a lista em memoria;
-- por que `DbContext` futuramente tende a ser `Scoped`.
+- diferenca entre interface e classe concreta;
+- por que a Service depende de `ITaskItemRepository`;
+- o que significa `AddSingleton<ITaskItemRepository, TaskItemRepository>()`;
+- por que o `Program.cs` e quem conhece a implementacao concreta;
+- por que `DbContext` futuramente tende a ser `Scoped`, nao `Singleton`.
 
-2. Corrigir a migracao parcial sem entregar tudo pronto:
+2. Fazer uma revisao curta do codigo atual:
 
-- pedir para o aluno olhar os erros `CS0103` do build;
-- perguntar onde `_tasks` e `_nextId` estao agora;
-- guiar a migracao de `GET /api/tasks` para `_taskItemService.GetAll()`;
-- guiar a migracao de `GET /api/tasks/{id}` para `_taskItemService.GetById(id)`;
-- pedir novo `dotnet build`.
+- conferir se a Controller ficou responsavel apenas por HTTP;
+- conferir se a Service ficou responsavel por regras de negocio;
+- conferir se a Repository ficou responsavel por dados em memoria;
+- discutir a repeticao de traducao de `ServiceResult<T>` na Controller como ponto de melhoria futura, sem refatorar imediatamente se isso atrapalhar o foco.
 
-3. Depois migrar um metodo por vez para a Service:
+3. Pedir testes manuais no arquivo `.http`:
 
-- `Create`;
-- `Update`;
-- `Complete`;
-- `Cancel`;
-- `Delete`.
+- criar tarefa valida;
+- criar tarefa sem titulo;
+- buscar id existente e inexistente;
+- atualizar tarefa existente e inexistente;
+- concluir tarefa pendente;
+- tentar concluir tarefa ja concluida;
+- cancelar tarefa pendente;
+- tentar cancelar tarefa concluida;
+- excluir tarefa;
+- tentar buscar tarefa excluida.
 
-4. Somente depois discutir Repository e interface.
+4. Depois disso, decidir a proxima etapa:
+
+- pequena refatoracao para reduzir repeticao na Controller; ou
+- introduzir validacao por atributos; ou
+- iniciar testes unitarios da Service.
 
 ## Perfil atual do aluno
 
@@ -145,8 +162,12 @@ Nivel estimado informado pelo aluno: 2,5 de 5.
 - Generics com `<T>`.
 - `ServiceResult<T>`.
 - `ServiceErrorType`.
-- Inicio de injecao de dependencia.
+- Injecao de dependencia.
 - `Singleton`, `Scoped` e `Transient`.
+- Repository.
+- Interface como contrato.
+- Programacao contra abstracoes.
+- Dependency Inversion Principle, o `D` do SOLID.
 
 ## Pontos que precisam ser revisados
 
@@ -156,10 +177,11 @@ Nivel estimado informado pelo aluno: 2,5 de 5.
 - Por que `Id` nao deve ser tratado como indice de lista.
 - Validacao manual vs validacao por atributos.
 - Responsabilidades futuras de Controller, Service e Repository.
-- A migracao para Service deve ser feita aos poucos para manter o build verde.
-- `TasksController` atualmente nao compila por ainda usar `_tasks` e `_nextId`.
+- Repeticao de traducao de `ServiceResult<T>` na Controller.
 - `ServiceResult<T>.Ok` deve preencher `ErrorType = ServiceErrorType.None` para manter consistencia.
-- `TaskItemService._nextId` existe, mas ainda nao e usado enquanto apenas `GetAll` e `GetById` foram extraidos.
+- Diferenca entre classe concreta e interface.
+- `AddSingleton<Interface, Implementacao>` no container de DI.
+- O build esta verde, mas ainda existe warning `NU1903` do pacote `Microsoft.OpenApi` 2.0.0.
 
 ## Regras importantes para a IA
 
