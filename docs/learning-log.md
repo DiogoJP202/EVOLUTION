@@ -45,3 +45,7 @@ Assuntos que precisam de reforco:
 | 2026-08-13 | TaskManager API | Controller helper | Criado `HandleServiceError<T>` para centralizar traducao de `ServiceResult<T>` para respostas HTTP e reduzir repeticao na Controller. |
 | 2026-08-13 | TaskManager API | Pacotes NuGet | Atualizado `Microsoft.AspNetCore.OpenApi` para `10.0.11`, removendo o warning `NU1903` causado pela dependencia transitiva `Microsoft.OpenApi` vulneravel. |
 | 2026-08-13 | TaskManager API | Onde paramos | Build passou sem warnings. Proxima etapa sugerida: revisar a feature de filtro e decidir entre validacao por atributos ou primeiros testes unitarios da Service. |
+| 2026-08-13 | TaskManager API | Testes unitarios | Criado projeto `TaskManager.Api.Tests` com xUnit, adicionado na solution e referenciado ao projeto da API. |
+| 2026-08-13 | TaskManager API | Fake repository | Criada `FakeTaskItemRepository` no projeto de testes para testar `TaskItemService` sem subir HTTP, sem banco e sem usar `Program.cs`. |
+| 2026-08-13 | TaskManager API | Primeiro teste | Criado `Complete_WhenTaskIsCanceled_ShouldReturnConflict`, validando que tarefa cancelada nao pode ser concluida. |
+| 2026-08-13 | TaskManager API | Onde paramos | Proxima tarefa: criar `Cancel_WhenTaskIsCompleted_ShouldReturnConflict`; pergunta pendente registrada em `UltimaConversa.md`. |

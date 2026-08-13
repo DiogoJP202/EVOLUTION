@@ -11,6 +11,7 @@ Este arquivo sera usado para registrar dificuldades, erros recorrentes, boas dec
 - Iniciar uma extracao de Service removendo campos da Controller antes de migrar todos os usos; isso gerou erros `CS0103` para `_tasks` e `_nextId`.
 - Achar que build verde sempre significa arquitetura correta; no caso da interface, o build passava mesmo quando a Service ainda dependia da classe concreta.
 - Confundir valor numerico de enum com posicao de lista; `status=999` e invalido porque nao existe no enum, nao porque acessa indice.
+- Usar `static` em fake de teste pode compartilhar estado entre testes e tornar resultados imprevisiveis.
 
 ## Boas decisoes
 
@@ -30,6 +31,10 @@ Este arquivo sera usado para registrar dificuldades, erros recorrentes, boas dec
 - Colocar o filtro por status na Service, mantendo a Controller focada em HTTP.
 - Criar `HandleServiceError<T>` para evitar repetir a traducao de erros em cada action.
 - Atualizar o pacote direto `Microsoft.AspNetCore.OpenApi` para corrigir vulnerabilidade em dependencia transitiva.
+- Criar projeto de testes separado para manter codigo de teste fora da API.
+- Usar `FakeTaskItemRepository` para testar a Service contra a interface `ITaskItemRepository`.
+- Refatorar a fake para receber dados pelo construtor, permitindo cada teste montar seu proprio cenario.
+- Criar o primeiro teste unitario de regra de negocio: tarefa cancelada nao pode ser concluida.
 
 ## Pontos para revisar depois
 
@@ -55,3 +60,9 @@ Este arquivo sera usado para registrar dificuldades, erros recorrentes, boas dec
 - `[FromQuery]`;
 - enum recebido pela URL;
 - dependencia transitiva em pacotes NuGet.
+- xUnit, `[Fact]` e `Assert`;
+- padrao AAA: Arrange, Act, Assert;
+- fake repository;
+- isolamento entre testes;
+- estado compartilhado e por que evitar `static` em fakes;
+- Project Reference entre projeto de testes e projeto da API.

@@ -65,10 +65,15 @@ Em andamento.
 - `TasksController` usa `HandleServiceError<T>` para centralizar a traducao de erros da Service para HTTP.
 - Pacote `Microsoft.AspNetCore.OpenApi` atualizado para `10.0.11`, removendo o warning `NU1903`.
 - Arquivo `TaskManager.Api.http` configurado para testar a API.
+- Projeto `TaskManager.Api.Tests` criado com xUnit.
+- Projeto de testes adicionado na solution.
+- Projeto de testes referencia `TaskManager.Api`.
+- `FakeTaskItemRepository` criada para testar `TaskItemService` sem HTTP e sem repository real.
+- Primeiro teste unitario criado: `Complete_WhenTaskIsCanceled_ShouldReturnConflict`.
 
 ## Onde paramos
 
-O ultimo assunto estudado foi query string, filtro por enum, validacao automatica de parametros e limpeza de repeticao na Controller.
+O ultimo assunto estudado foi teste unitario com xUnit, padrao AAA, fake repository e isolamento entre testes.
 
 Estado tecnico atual:
 
@@ -79,15 +84,39 @@ Estado tecnico atual:
 - `TaskItemRepository` possui a lista em memoria, busca por id, adicao, remocao e geracao de ids;
 - `TasksController` traduz os resultados da Service para respostas HTTP;
 - `GET /api/tasks` pode retornar todas as tarefas ou filtrar por `TaskItemStatus`;
-- o build esta passando sem warnings.
+- `TaskManager.Api.Tests` possui uma fake repository para montar cenarios de teste;
+- ja existe 1 teste unitario passando para proteger a regra "tarefa cancelada nao pode ser concluida";
+- `dotnet test` esta passando.
 
 ## Pendencias proximas
 
-- Revisar route parameter vs query string.
-- Revisar enum recebido pela URL e validacao automatica do `[ApiController]`.
-- Revisar `HandleServiceError<T>` e por que ele fica na Controller.
-- Rodar `dotnet build` apos cada pequena mudanca.
-- Escolher a proxima etapa: validacao por atributos ou primeiros testes unitarios da Service.
+- Revisar xUnit, `[Fact]`, `Assert` e AAA.
+- Revisar por que `dotnet test` compila a API sem subir servidor HTTP.
+- Revisar por que `FakeTaskItemRepository` fica no projeto de testes.
+- Revisar por que evitar `static` em fakes de teste.
+- Criar o teste `Cancel_WhenTaskIsCompleted_ShouldReturnConflict`.
+- Rodar `dotnet test` apos cada teste novo.
+
+## Testes
+
+Projeto de testes:
+
+```text
+TaskManager.Api.Tests
+```
+
+Comando para rodar:
+
+```powershell
+dotnet test
+```
+
+Estado atual:
+
+- framework usado: xUnit;
+- fake criada: `FakeTaskItemRepository`;
+- teste existente: `Complete_WhenTaskIsCanceled_ShouldReturnConflict`;
+- objetivo atual: testar regras de negocio da `TaskItemService` sem subir a API.
 
 ## Pendencias futuras
 
@@ -95,6 +124,5 @@ Estado tecnico atual:
 - Criar validacoes mais robustas.
 - Adicionar tratamento global de erros.
 - Adicionar logging.
-- Criar testes unitarios.
 - Criar testes de integracao.
 - Evoluir para autenticacao e autorizacao.

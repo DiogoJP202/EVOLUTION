@@ -8,7 +8,7 @@ Este espaco sera usado para separar os projetos da trilha, registrar progresso, 
 
 ![Barra de progresso animada](./assets/progress.svg)
 
-> Status atual: Projeto 01 em andamento. CRUD em memoria foi organizado em Controller, Service e Repository; a API ja filtra tarefas por status via query string e o build esta limpo.
+> Status atual: Projeto 01 em andamento. CRUD em memoria foi organizado em Controller, Service e Repository; a API ja filtra tarefas por status e os primeiros testes unitarios com xUnit foram iniciados.
 
 ## Objetivo
 
@@ -112,6 +112,7 @@ Os documentos de acompanhamento ficam em [docs](./docs):
 - [learning-log.md](./docs/learning-log.md): registro do que ja foi estudado.
 - [review-notes.md](./docs/review-notes.md): erros recorrentes, boas decisoes e pontos de melhoria.
 - [interview-questions.md](./docs/interview-questions.md): perguntas de revisao e entrevista.
+- [UltimaConversa.md](./UltimaConversa.md): ultimo ponto pendente da mentoria para retomada rapida.
 
 ## Padrao de trabalho
 
@@ -204,18 +205,21 @@ Ultima etapa concluida:
 - criado filtro opcional `GET /api/tasks?status=Pending`;
 - criado helper generico `HandleServiceError<T>` na Controller;
 - atualizado `Microsoft.AspNetCore.OpenApi` para remover o warning `NU1903`;
-- build e teste basico funcionando sem warnings.
+- criado projeto `TaskManager.Api.Tests` com xUnit;
+- criada `FakeTaskItemRepository` para testes unitarios da Service;
+- criado primeiro teste de regra de negocio: tarefa cancelada nao pode ser concluida;
+- `dotnet test` funcionando com 1 teste passando.
 
 Onde paramos:
 
 - a Controller usa `TaskItemService` e traduz `ServiceResult<T>` para respostas HTTP;
 - a Service conhece regras de negocio e depende de `ITaskItemRepository`;
 - a Repository conhece a lista em memoria e o controle de ids;
-- proxima etapa conceitual: revisar route parameter vs query string, enum via URL e helper generico;
-- proxima tarefa tecnica: escolher entre validacao por atributos ou primeiros testes unitarios da Service.
+- proxima etapa conceitual: revisar xUnit, AAA, fake repository e isolamento entre testes;
+- proxima tarefa tecnica: criar o teste `Cancel_WhenTaskIsCompleted_ShouldReturnConflict`.
 
 Pendencias planejadas do Projeto 01:
 
-- trocar lista em memoria por Entity Framework Core;
 - adicionar testes unitarios e testes de integracao;
+- trocar lista em memoria por Entity Framework Core;
 - adicionar tratamento de erros e logging.

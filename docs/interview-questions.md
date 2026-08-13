@@ -46,3 +46,13 @@ Este arquivo guardara perguntas curtas para revisar conceitos aprendidos.
 - O que e um teste unitario?
 - O que e um teste de integracao?
 - Por que testar regra de negocio no Service costuma ser mais simples do que testar direto no Controller?
+- O que e xUnit?
+- Para que serve o atributo `[Fact]`?
+- O que significa AAA em testes?
+- Qual a diferenca entre Arrange, Act e Assert?
+- Por que um teste unitario da Service nao precisa subir a API com `dotnet run`?
+- Por que o projeto de testes referencia o projeto da API?
+- O que e uma fake repository?
+- Por que estado `static` em fakes pode causar testes imprevisiveis?
+- Por que cada teste deve montar seu proprio cenario?
+- O que o teste `Complete_WhenTaskIsCanceled_ShouldReturnConflict` protege?

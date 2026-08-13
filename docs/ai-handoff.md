@@ -60,6 +60,14 @@ Objetivo do repositorio:
 - Revisado enum recebido pela URL e validacao automatica do `[ApiController]`.
 - Criado helper generico `HandleServiceError<T>` na `TasksController`.
 - Build passou sem warnings.
+- Criado projeto `TaskManager.Api.Tests` com xUnit.
+- Projeto de testes adicionado na solution `TaskManager.slnx`.
+- Projeto de testes referencia `TaskManager.Api`.
+- Criada `FakeTaskItemRepository` no projeto de testes.
+- Fake repository recebe dados pelo construtor e calcula `_nextId` pelo maior `Id`.
+- Criado primeiro teste unitario real: `Complete_WhenTaskIsCanceled_ShouldReturnConflict`.
+- `dotnet test` foi executado pelo aluno e passou com 1 teste.
+- Criado `UltimaConversa.md` na raiz para registrar o ultimo ponto pendente da mentoria.
 
 ## Onde o aluno parou
 
@@ -75,7 +83,11 @@ Objetivo do repositorio:
 - `GET /api/tasks` aceita filtro opcional por status via query string.
 - `TasksController` usa `HandleServiceError<T>` para centralizar a traducao de erros.
 - O build esta passando sem warnings.
-- Ainda nao existe banco de dados ou testes automatizados.
+- Ja existe projeto de testes automatizados com xUnit.
+- Existe uma fake repository para testes da Service.
+- Existe 1 teste unitario passando.
+- Ainda nao existe banco de dados ou testes de integracao.
+- O ponto pendente atual esta em `UltimaConversa.md`.
 - O aluno quer escrever o codigo por conta propria.
 - A IA deve explicar conceitos antes da tarefa, fazer perguntas de entendimento e depois pedir a implementacao.
 
@@ -83,33 +95,34 @@ Objetivo do repositorio:
 
 1. Retomar pela revisao conceitual da ultima etapa:
 
-- route parameter vs query string;
-- `[FromQuery]`;
-- enum recebido via URL;
-- por que `status=banana` retorna `400` antes da action executar;
-- por que filtro de listagem ficou na Service;
-- por que `HandleServiceError<T>` pertence a Controller.
+- o que e teste unitario;
+- o que e xUnit;
+- para que serve `[Fact]`;
+- o que e `Assert`;
+- padrao AAA: Arrange, Act, Assert;
+- por que testar `TaskItemService` nao exige subir HTTP;
+- por que a fake repository fica no projeto de testes;
+- por que evitar `static` em fakes de teste.
 
 2. Fazer uma revisao curta do codigo atual:
 
 - conferir se a Controller ficou responsavel apenas por HTTP;
 - conferir se a Service ficou responsavel por regras de negocio;
 - conferir se a Repository ficou responsavel por dados em memoria;
-- revisar se o helper generico nao mistura regra de negocio com transporte HTTP.
+- conferir se `FakeTaskItemRepository` nao compartilha estado entre testes;
+- conferir se o teste `Complete_WhenTaskIsCanceled_ShouldReturnConflict` valida regra e preserva estado.
 
-3. Se quiser fechar a feature com testes manuais, pedir:
+3. Proxima tarefa sugerida:
 
-- `GET /api/tasks`;
-- `GET /api/tasks?status=Pending`;
-- `GET /api/tasks?status=Completed`;
-- `GET /api/tasks?status=banana`;
-- `GET /api/tasks/1`;
-- `GET /api/tasks/999`.
+- responder a pergunta pendente: por que no teste de cancelamento de tarefa concluida faz sentido verificar que `CompletedAt` continua preenchido;
+- criar `Cancel_WhenTaskIsCompleted_ShouldReturnConflict`;
+- rodar `dotnet test`;
+- pedir o codigo do teste e revisar.
 
 4. Depois disso, decidir a proxima etapa:
 
 - introduzir validacao por atributos; ou
-- iniciar testes unitarios da Service.
+- continuar cobrindo regras da Service com testes unitarios.
 
 ## Perfil atual do aluno
 
@@ -179,6 +192,15 @@ Nivel estimado informado pelo aluno: 2,5 de 5.
 - Enum vindo pela URL.
 - Validacao automatica do `[ApiController]`.
 - Helper generico `HandleServiceError<T>`.
+- Teste unitario.
+- xUnit.
+- `[Fact]`.
+- `Assert`.
+- AAA: Arrange, Act, Assert.
+- Fake repository.
+- Isolamento entre testes.
+- Estado compartilhado com `static`.
+- Project Reference em projeto de teste.
 
 ## Pontos que precisam ser revisados
 
@@ -194,6 +216,9 @@ Nivel estimado informado pelo aluno: 2,5 de 5.
 - `AddSingleton<Interface, Implementacao>` no container de DI.
 - Route parameter vs query string.
 - O build esta verde e sem warning `NU1903` depois da atualizacao de `Microsoft.AspNetCore.OpenApi`.
+- Diferenca entre teste unitario e teste de integracao.
+- Por que teste unitario da Service nao usa `Program.cs`.
+- Por que cada teste deve montar seu proprio cenario.
 
 ## Regras importantes para a IA
 
