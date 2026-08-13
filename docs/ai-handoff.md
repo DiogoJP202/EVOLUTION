@@ -4,7 +4,7 @@ Este documento existe para permitir que outra IA continue a mentoria de onde ela
 
 ## Estado atual
 
-Data do registro: 2026-08-12
+Data do registro: 2026-08-13
 
 Repositorio: ProjetoCSharp
 
@@ -54,7 +54,12 @@ Objetivo do repositorio:
 - `TaskItemRepository` implementa `ITaskItemRepository`.
 - `TaskItemService` passou a depender de `ITaskItemRepository`, nao da classe concreta.
 - Registrado `ITaskItemRepository` no container de DI apontando para `TaskItemRepository`.
-- Build voltou a ficar verde, restando apenas o warning `NU1903` do pacote `Microsoft.OpenApi`.
+- Atualizado `Microsoft.AspNetCore.OpenApi` para `10.0.11`, removendo o warning `NU1903` causado por dependencia transitiva vulneravel.
+- Criado filtro opcional por status em `GET /api/tasks?status=Pending`.
+- Revisados route parameter vs query string.
+- Revisado enum recebido pela URL e validacao automatica do `[ApiController]`.
+- Criado helper generico `HandleServiceError<T>` na `TasksController`.
+- Build passou sem warnings.
 
 ## Onde o aluno parou
 
@@ -67,44 +72,42 @@ Objetivo do repositorio:
 - `TaskItemRepository` ja existe e guarda a lista estatica em memoria e o controle de proximo id.
 - `ITaskItemRepository` ja existe como contrato da repository.
 - `Program.cs` registra `builder.Services.AddSingleton<ITaskItemRepository, TaskItemRepository>();`.
-- O build esta passando com warning conhecido `NU1903`.
+- `GET /api/tasks` aceita filtro opcional por status via query string.
+- `TasksController` usa `HandleServiceError<T>` para centralizar a traducao de erros.
+- O build esta passando sem warnings.
 - Ainda nao existe banco de dados ou testes automatizados.
 - O aluno quer escrever o codigo por conta propria.
 - A IA deve explicar conceitos antes da tarefa, fazer perguntas de entendimento e depois pedir a implementacao.
 
 ## Proximo passo sugerido
 
-1. Retomar pela revisao conceitual de interfaces e DI:
+1. Retomar pela revisao conceitual da ultima etapa:
 
-- diferenca entre interface e classe concreta;
-- por que a Service depende de `ITaskItemRepository`;
-- o que significa `AddSingleton<ITaskItemRepository, TaskItemRepository>()`;
-- por que o `Program.cs` e quem conhece a implementacao concreta;
-- por que `DbContext` futuramente tende a ser `Scoped`, nao `Singleton`.
+- route parameter vs query string;
+- `[FromQuery]`;
+- enum recebido via URL;
+- por que `status=banana` retorna `400` antes da action executar;
+- por que filtro de listagem ficou na Service;
+- por que `HandleServiceError<T>` pertence a Controller.
 
 2. Fazer uma revisao curta do codigo atual:
 
 - conferir se a Controller ficou responsavel apenas por HTTP;
 - conferir se a Service ficou responsavel por regras de negocio;
 - conferir se a Repository ficou responsavel por dados em memoria;
-- discutir a repeticao de traducao de `ServiceResult<T>` na Controller como ponto de melhoria futura, sem refatorar imediatamente se isso atrapalhar o foco.
+- revisar se o helper generico nao mistura regra de negocio com transporte HTTP.
 
-3. Pedir testes manuais no arquivo `.http`:
+3. Se quiser fechar a feature com testes manuais, pedir:
 
-- criar tarefa valida;
-- criar tarefa sem titulo;
-- buscar id existente e inexistente;
-- atualizar tarefa existente e inexistente;
-- concluir tarefa pendente;
-- tentar concluir tarefa ja concluida;
-- cancelar tarefa pendente;
-- tentar cancelar tarefa concluida;
-- excluir tarefa;
-- tentar buscar tarefa excluida.
+- `GET /api/tasks`;
+- `GET /api/tasks?status=Pending`;
+- `GET /api/tasks?status=Completed`;
+- `GET /api/tasks?status=banana`;
+- `GET /api/tasks/1`;
+- `GET /api/tasks/999`.
 
 4. Depois disso, decidir a proxima etapa:
 
-- pequena refatoracao para reduzir repeticao na Controller; ou
 - introduzir validacao por atributos; ou
 - iniciar testes unitarios da Service.
 
@@ -168,6 +171,14 @@ Nivel estimado informado pelo aluno: 2,5 de 5.
 - Interface como contrato.
 - Programacao contra abstracoes.
 - Dependency Inversion Principle, o `D` do SOLID.
+- Composition Root.
+- Dependencia transitiva em NuGet.
+- Query string.
+- Route parameter.
+- `[FromQuery]`.
+- Enum vindo pela URL.
+- Validacao automatica do `[ApiController]`.
+- Helper generico `HandleServiceError<T>`.
 
 ## Pontos que precisam ser revisados
 
@@ -181,7 +192,8 @@ Nivel estimado informado pelo aluno: 2,5 de 5.
 - `ServiceResult<T>.Ok` deve preencher `ErrorType = ServiceErrorType.None` para manter consistencia.
 - Diferenca entre classe concreta e interface.
 - `AddSingleton<Interface, Implementacao>` no container de DI.
-- O build esta verde, mas ainda existe warning `NU1903` do pacote `Microsoft.OpenApi` 2.0.0.
+- Route parameter vs query string.
+- O build esta verde e sem warning `NU1903` depois da atualizacao de `Microsoft.AspNetCore.OpenApi`.
 
 ## Regras importantes para a IA
 

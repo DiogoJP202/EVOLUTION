@@ -10,6 +10,7 @@ Este arquivo sera usado para registrar dificuldades, erros recorrentes, boas dec
 - Assumir que `Id` e indice da lista sao equivalentes; isso quebra quando itens sao removidos, reordenados ou filtrados.
 - Iniciar uma extracao de Service removendo campos da Controller antes de migrar todos os usos; isso gerou erros `CS0103` para `_tasks` e `_nextId`.
 - Achar que build verde sempre significa arquitetura correta; no caso da interface, o build passava mesmo quando a Service ainda dependia da classe concreta.
+- Confundir valor numerico de enum com posicao de lista; `status=999` e invalido porque nao existe no enum, nao porque acessa indice.
 
 ## Boas decisoes
 
@@ -26,6 +27,9 @@ Este arquivo sera usado para registrar dificuldades, erros recorrentes, boas dec
 - Criar `TaskItemRepository` para isolar o acesso aos dados em memoria.
 - Criar `ITaskItemRepository` e fazer a Service depender da abstracao.
 - Registrar `ITaskItemRepository` apontando para `TaskItemRepository` no `Program.cs`.
+- Colocar o filtro por status na Service, mantendo a Controller focada em HTTP.
+- Criar `HandleServiceError<T>` para evitar repetir a traducao de erros em cada action.
+- Atualizar o pacote direto `Microsoft.AspNetCore.OpenApi` para corrigir vulnerabilidade em dependencia transitiva.
 
 ## Pontos para revisar depois
 
@@ -38,7 +42,6 @@ Este arquivo sera usado para registrar dificuldades, erros recorrentes, boas dec
 - DTOs de entrada;
 - `201 Created` vs `200 OK`;
 - validacao manual vs validacao por atributos.
-- warning `NU1903` do pacote `Microsoft.OpenApi` 2.0.0 gerado pelo template.
 - DI container;
 - `Singleton`, `Scoped` e `Transient`;
 - diferenca entre retornar dados na Service e retornar `IActionResult` na Controller;
@@ -48,3 +51,7 @@ Este arquivo sera usado para registrar dificuldades, erros recorrentes, boas dec
 - `AddSingleton<ITaskItemRepository, TaskItemRepository>()`;
 - Dependency Inversion Principle, o `D` do SOLID;
 - quando usar `Conflict` para conflito de regra/estado.
+- route parameter vs query string;
+- `[FromQuery]`;
+- enum recebido pela URL;
+- dependencia transitiva em pacotes NuGet.

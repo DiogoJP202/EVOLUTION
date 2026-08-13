@@ -61,11 +61,14 @@ Em andamento.
 - `TaskItemRepository` implementa `ITaskItemRepository`.
 - `TaskItemService` depende de `ITaskItemRepository`.
 - `Program.cs` registra `ITaskItemRepository` apontando para `TaskItemRepository`.
+- `GET /api/tasks` aceita filtro opcional por query string: `?status=Pending`, `?status=Completed`, etc.
+- `TasksController` usa `HandleServiceError<T>` para centralizar a traducao de erros da Service para HTTP.
+- Pacote `Microsoft.AspNetCore.OpenApi` atualizado para `10.0.11`, removendo o warning `NU1903`.
 - Arquivo `TaskManager.Api.http` configurado para testar a API.
 
 ## Onde paramos
 
-O ultimo assunto estudado foi interface aplicada a Repository e injecao de dependencia usando abstracao.
+O ultimo assunto estudado foi query string, filtro por enum, validacao automatica de parametros e limpeza de repeticao na Controller.
 
 Estado tecnico atual:
 
@@ -75,16 +78,16 @@ Estado tecnico atual:
 - `TaskItemService` executa as regras de negocio e retorna `ServiceResult<T>`;
 - `TaskItemRepository` possui a lista em memoria, busca por id, adicao, remocao e geracao de ids;
 - `TasksController` traduz os resultados da Service para respostas HTTP;
-- o build esta passando, com o warning conhecido `NU1903` do pacote `Microsoft.OpenApi`.
+- `GET /api/tasks` pode retornar todas as tarefas ou filtrar por `TaskItemStatus`;
+- o build esta passando sem warnings.
 
 ## Pendencias proximas
 
-- Revisar interface, implementacao concreta e inversao de dependencia.
-- Testar todos os endpoints pelo arquivo `.http` apos a criacao da interface.
-- Revisar responsabilidades atuais entre Controller, Service e Repository.
-- Avaliar, sem pressa, uma pequena refatoracao para reduzir repeticao na traducao de `ServiceResult<T>` dentro da Controller.
+- Revisar route parameter vs query string.
+- Revisar enum recebido pela URL e validacao automatica do `[ApiController]`.
+- Revisar `HandleServiceError<T>` e por que ele fica na Controller.
 - Rodar `dotnet build` apos cada pequena mudanca.
-- Acompanhar o warning `NU1903` do pacote `Microsoft.OpenApi` 2.0.0 apontado pelo `dotnet build`.
+- Escolher a proxima etapa: validacao por atributos ou primeiros testes unitarios da Service.
 
 ## Pendencias futuras
 

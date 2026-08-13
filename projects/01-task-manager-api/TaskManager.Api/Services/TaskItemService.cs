@@ -12,12 +12,21 @@ public class TaskItemService
     {
         _taskItemRepository = taskItemRepository;
     }
-    public ServiceResult<List<TaskItem>> GetAll()
+
+    public ServiceResult<List<TaskItem>> GetAll(TaskItemStatus? status)
     {
         List<TaskItem> tasks = _taskItemRepository.GetAll();
 
-        return ServiceResult<List<TaskItem>>.Ok(tasks);
+        if (status == null)
+            return ServiceResult<List<TaskItem>>.Ok(tasks);
+            
+        List<TaskItem> filteredTasks = tasks
+            .Where(t => t.Status == status)
+            .ToList();
+
+        return ServiceResult<List<TaskItem>>.Ok(filteredTasks);
     }
+
     public ServiceResult<TaskItem> GetById(int id)
     {
         TaskItem? task = _taskItemRepository.GetById(id);
@@ -27,6 +36,7 @@ public class TaskItemService
 
         return ServiceResult<TaskItem>.Ok(task);
     }
+
     public ServiceResult<TaskItem> Create(CreateTaskItemRequest request)
     {
         if (string.IsNullOrWhiteSpace(request.Title))
@@ -44,6 +54,7 @@ public class TaskItemService
         _taskItemRepository.Add(newTask);
         return ServiceResult<TaskItem>.Ok(newTask);
     }
+
     public ServiceResult<TaskItem> Update(int id, UpdateTaskItemRequest request)
     {
         TaskItem? task = _taskItemRepository.GetById(id);
@@ -59,6 +70,7 @@ public class TaskItemService
 
         return ServiceResult<TaskItem>.Ok(task);
     }
+
     public ServiceResult<TaskItem> Complete(int id)
     {
         TaskItem? task = _taskItemRepository.GetById(id);
@@ -77,6 +89,7 @@ public class TaskItemService
 
         return ServiceResult<TaskItem>.Ok(task);
     }
+    
     public ServiceResult<TaskItem> Cancel(int id)
     {
         TaskItem? task = _taskItemRepository.GetById(id);
@@ -93,6 +106,7 @@ public class TaskItemService
         task.Status = TaskItemStatus.Canceled;
         return ServiceResult<TaskItem>.Ok(task);
     }
+    
     public ServiceResult<bool> Delete(int id)
     {
         TaskItem? task = _taskItemRepository.GetById(id);

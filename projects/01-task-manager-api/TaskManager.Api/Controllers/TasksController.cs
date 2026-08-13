@@ -17,18 +17,14 @@ public class TasksController : ControllerBase
     }
 
     [HttpGet]
-    public IActionResult Get()
+    public IActionResult Get([FromQuery] TaskItemStatus? status)
     {
-        ServiceResult<List<TaskItem>> result = _taskItemService.GetAll();
+        ServiceResult<List<TaskItem>> result = _taskItemService.GetAll(status);
 
         if (result.Success)
-        {
             return Ok(result.Data);
-        }
-        else
-        {
-             return StatusCode(500, new { erro = result.ErrorMessage });
-        }
+
+        return HandleServiceError(result);
     }
 
     [HttpGet("{id}")]
@@ -37,16 +33,9 @@ public class TasksController : ControllerBase
         ServiceResult<TaskItem> result = _taskItemService.GetById(id);
 
         if (result.Success)
-        {
             return Ok(result.Data);
-        }
-        else
-        {
-            if (result.ErrorType == ServiceErrorType.NotFound)
-                return NotFound(result.ErrorMessage);
 
-            return StatusCode(500, new { erro = result.ErrorMessage });
-        }
+        return HandleServiceError(result);
     }
 
     [HttpPost]
@@ -55,39 +44,20 @@ public class TasksController : ControllerBase
         ServiceResult<TaskItem> result = _taskItemService.Create(request);
 
         if (result.Success)
-        {
             return CreatedAtAction(nameof(GetById), new { id = result.Data!.Id }, result.Data);
-        }
-        else
-        {
-            if (result.ErrorType == ServiceErrorType.Validation)
-                return BadRequest(result.ErrorMessage);
 
-            return StatusCode(500, new { error = result.ErrorMessage });
-        }
-
+        return HandleServiceError(result);
     }
 
     [HttpPut("{id}")]
     public IActionResult Put(int id, UpdateTaskItemRequest request)
-    // Quando existe um objeto complexo no como parâmetro o ASP.NET automáticamente supoe que ele é o body.
     {
         ServiceResult<TaskItem> result = _taskItemService.Update(id, request);
 
         if (result.Success)
-        {
             return Ok(result.Data);
-        }
-        else
-        {
-            if (result.ErrorType == ServiceErrorType.NotFound)
-                return NotFound(result.ErrorMessage);
-
-            if (result.ErrorType == ServiceErrorType.Validation)
-                return BadRequest(result.ErrorMessage);
-
-            return StatusCode(500, new { erro = result.ErrorMessage });
-        }
+        
+        return HandleServiceError(result);
     }
 
     [HttpPatch("{id}/complete")]
@@ -96,19 +66,9 @@ public class TasksController : ControllerBase
         ServiceResult<TaskItem> result = _taskItemService.Complete(id);
 
         if (result.Success)
-        {
             return Ok(result.Data);
-        }
-        else
-        {
-            if (result.ErrorType == ServiceErrorType.NotFound)
-                return NotFound(result.ErrorMessage);
-
-            if (result.ErrorType == ServiceErrorType.Conflict)
-                return Conflict(result.ErrorMessage);
-
-            return StatusCode(500, new { error = result.ErrorMessage });
-        }
+        
+        return HandleServiceError(result);
     }
 
     [HttpPatch("{id}/cancel")]
@@ -117,19 +77,9 @@ public class TasksController : ControllerBase
         ServiceResult<TaskItem> result = _taskItemService.Cancel(id);
 
         if (result.Success)
-        {
             return Ok(result.Data);
-        }
-        else
-        {
-            if (result.ErrorType == ServiceErrorType.NotFound)
-                return NotFound(result.ErrorMessage);
-
-            if (result.ErrorType == ServiceErrorType.Conflict)
-                return Conflict(result.ErrorMessage);
-
-            return StatusCode(500, new { erro = result.ErrorMessage });
-        }
+        
+        return HandleServiceError(result);
     }
 
     [HttpDelete("{id}")]
@@ -138,15 +88,22 @@ public class TasksController : ControllerBase
         ServiceResult<bool> result = _taskItemService.Delete(id);
 
         if (result.Success)
-        {
             return NoContent();
-        }
-        else
-        {
-            if (result.ErrorType == ServiceErrorType.NotFound)
-                return NotFound(result.ErrorMessage);
+        
+        return HandleServiceError(result);
+    }
 
-            return StatusCode(500, new { error = result.ErrorMessage });
-        }
+    private IActionResult HandleServiceError<T>(ServiceResult<T> result)
+    {
+        if (result.ErrorType == ServiceErrorType.NotFound)
+            return NotFound(result.ErrorMessage);
+
+        if (result.ErrorType == ServiceErrorType.Validation)
+            return BadRequest(result.ErrorMessage);
+
+        if (result.ErrorType == ServiceErrorType.Conflict)
+            return Conflict(result.ErrorMessage);
+            
+        return StatusCode(500, new { error = result.ErrorMessage });
     }
 }

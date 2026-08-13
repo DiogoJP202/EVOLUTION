@@ -41,3 +41,7 @@ Assuntos que precisam de reforco:
 | 2026-08-12 | TaskManager API | Repository | Criado `TaskItemRepository` para concentrar lista em memoria, busca por id, adicao, remocao e geracao de ids. |
 | 2026-08-12 | TaskManager API | Interface e DI | Criada `ITaskItemRepository`; `TaskItemService` passou a depender da interface e `Program.cs` passou a registrar `ITaskItemRepository -> TaskItemRepository`. |
 | 2026-08-12 | TaskManager API | Onde paramos | Build e teste basico funcionaram. Proxima etapa: revisar se Controller, Service e Repository estao com responsabilidades claras e testar todos os endpoints pelo `.http`. |
+| 2026-08-13 | TaskManager API | Query string | Adicionado filtro opcional `GET /api/tasks?status=Pending`; revisados query string, route parameter, enum via URL e validacao automatica do `[ApiController]`. |
+| 2026-08-13 | TaskManager API | Controller helper | Criado `HandleServiceError<T>` para centralizar traducao de `ServiceResult<T>` para respostas HTTP e reduzir repeticao na Controller. |
+| 2026-08-13 | TaskManager API | Pacotes NuGet | Atualizado `Microsoft.AspNetCore.OpenApi` para `10.0.11`, removendo o warning `NU1903` causado pela dependencia transitiva `Microsoft.OpenApi` vulneravel. |
+| 2026-08-13 | TaskManager API | Onde paramos | Build passou sem warnings. Proxima etapa sugerida: revisar a feature de filtro e decidir entre validacao por atributos ou primeiros testes unitarios da Service. |

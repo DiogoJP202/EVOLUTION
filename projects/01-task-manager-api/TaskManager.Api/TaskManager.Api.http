@@ -140,4 +140,18 @@ Accept: application/json
 DELETE {{host}}/api/tasks/999
 Accept: application/json
 
-###
+### List all tasks
+GET {{host}}/api/tasks
+Accept: application/json
+
+### List pending tasks
+GET {{host}}/api/tasks?status=Pending
+Accept: application/json
+
+### List completed tasks
+GET {{host}}/api/tasks?status=Completed
+Accept: application/json
+
+### Try invalid task status
+GET {{host}}/api/tasks?status=banana
+Accept: application/json

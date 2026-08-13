@@ -15,6 +15,10 @@ Este arquivo guardara perguntas curtas para revisar conceitos aprendidos.
 - Qual a diferenca entre GET, POST, PUT, PATCH e DELETE?
 - O que significa uma API ser REST?
 - Quando retornar 200, 201, 204, 400, 404, 409 e 500?
+- Qual a diferenca entre route parameter e query string?
+- Quando voce usaria `/api/tasks/{id}` e quando usaria `/api/tasks?status=Pending`?
+- O que o `[FromQuery]` indica em uma action?
+- Quem retorna o `400` quando `[ApiController]` nao consegue converter uma query string para enum?
 
 ## Arquitetura e DI
 
@@ -28,6 +32,8 @@ Este arquivo guardara perguntas curtas para revisar conceitos aprendidos.
 - Por que depender de uma abstracao facilita trocar uma repository em memoria por uma repository com banco?
 - O que o `D` do SOLID quer dizer na pratica?
 - Por que `ServiceResult<T>` nao deve retornar `IActionResult`?
+- Por que `HandleServiceError<T>` pertence a Controller, mesmo sendo generico?
+- O que e uma dependencia transitiva em NuGet?
 
 ## Banco de Dados
 
