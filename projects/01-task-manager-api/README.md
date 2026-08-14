@@ -70,6 +70,8 @@ Em andamento.
 - Projeto de testes referencia `TaskManager.Api`.
 - `FakeTaskItemRepository` criada para testar `TaskItemService` sem HTTP e sem repository real.
 - Primeiro teste unitario criado: `Complete_WhenTaskIsCanceled_ShouldReturnConflict`.
+- Segundo teste unitario criado: `Cancel_WhenTaskIsCompleted_ShouldReturnConflict`.
+- Helper `CreateServiceWithTasks` criado para reduzir repeticao no Arrange.
 
 ## Onde paramos
 
@@ -85,8 +87,8 @@ Estado tecnico atual:
 - `TasksController` traduz os resultados da Service para respostas HTTP;
 - `GET /api/tasks` pode retornar todas as tarefas ou filtrar por `TaskItemStatus`;
 - `TaskManager.Api.Tests` possui uma fake repository para montar cenarios de teste;
-- ja existe 1 teste unitario passando para proteger a regra "tarefa cancelada nao pode ser concluida";
-- `dotnet test` esta passando.
+- ja existem 2 testes unitarios para proteger regras de conclusao/cancelamento;
+- o ultimo `dotnet test` reportado passou com 2 testes.
 
 ## Pendencias proximas
 
@@ -94,7 +96,9 @@ Estado tecnico atual:
 - Revisar por que `dotnet test` compila a API sem subir servidor HTTP.
 - Revisar por que `FakeTaskItemRepository` fica no projeto de testes.
 - Revisar por que evitar `static` em fakes de teste.
-- Criar o teste `Cancel_WhenTaskIsCompleted_ShouldReturnConflict`.
+- Responder por que o helper `CreateServiceWithTasks` pode ser `private static`.
+- Revisar o arquivo `TaskItemServiceTests`.
+- Rodar `dotnet test` apos a revisao.
 - Rodar `dotnet test` apos cada teste novo.
 
 ## Testes
@@ -115,7 +119,10 @@ Estado atual:
 
 - framework usado: xUnit;
 - fake criada: `FakeTaskItemRepository`;
-- teste existente: `Complete_WhenTaskIsCanceled_ShouldReturnConflict`;
+- testes existentes:
+  - `Complete_WhenTaskIsCanceled_ShouldReturnConflict`;
+  - `Cancel_WhenTaskIsCompleted_ShouldReturnConflict`;
+- helper existente: `CreateServiceWithTasks`;
 - objetivo atual: testar regras de negocio da `TaskItemService` sem subir a API.
 
 ## Pendencias futuras

@@ -207,16 +207,17 @@ Ultima etapa concluida:
 - atualizado `Microsoft.AspNetCore.OpenApi` para remover o warning `NU1903`;
 - criado projeto `TaskManager.Api.Tests` com xUnit;
 - criada `FakeTaskItemRepository` para testes unitarios da Service;
-- criado primeiro teste de regra de negocio: tarefa cancelada nao pode ser concluida;
-- `dotnet test` funcionando com 1 teste passando.
+- criados dois testes de regra de negocio para concluir/cancelar tarefas;
+- criado helper `CreateServiceWithTasks` para reduzir repeticao no Arrange;
+- `dotnet test` reportado com 2 testes passando.
 
 Onde paramos:
 
 - a Controller usa `TaskItemService` e traduz `ServiceResult<T>` para respostas HTTP;
 - a Service conhece regras de negocio e depende de `ITaskItemRepository`;
 - a Repository conhece a lista em memoria e o controle de ids;
-- proxima etapa conceitual: revisar xUnit, AAA, fake repository e isolamento entre testes;
-- proxima tarefa tecnica: criar o teste `Cancel_WhenTaskIsCompleted_ShouldReturnConflict`.
+- proxima etapa conceitual: revisar helper de teste e por que ele pode ser `private static`;
+- proxima tarefa tecnica: revisar `TaskItemServiceTests` e continuar cobrindo regras da Service.
 
 Pendencias planejadas do Projeto 01:
 

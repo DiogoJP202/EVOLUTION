@@ -35,6 +35,8 @@ Este arquivo sera usado para registrar dificuldades, erros recorrentes, boas dec
 - Usar `FakeTaskItemRepository` para testar a Service contra a interface `ITaskItemRepository`.
 - Refatorar a fake para receber dados pelo construtor, permitindo cada teste montar seu proprio cenario.
 - Criar o primeiro teste unitario de regra de negocio: tarefa cancelada nao pode ser concluida.
+- Fortalecer o teste de tarefa concluida comparando o valor exato de `CompletedAt`, nao apenas verificando que ele nao e nulo.
+- Criar helper pequeno de teste para reduzir repeticao sem esconder o comportamento testado.
 
 ## Pontos para revisar depois
 
@@ -66,3 +68,6 @@ Este arquivo sera usado para registrar dificuldades, erros recorrentes, boas dec
 - isolamento entre testes;
 - estado compartilhado e por que evitar `static` em fakes;
 - Project Reference entre projeto de testes e projeto da API.
+- helpers de teste;
+- quando usar `private static` em metodo auxiliar de teste;
+- diferenca entre `Assert.NotNull` e `Assert.Equal` ao preservar um valor.

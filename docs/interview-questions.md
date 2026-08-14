@@ -56,3 +56,6 @@ Este arquivo guardara perguntas curtas para revisar conceitos aprendidos.
 - Por que estado `static` em fakes pode causar testes imprevisiveis?
 - Por que cada teste deve montar seu proprio cenario?
 - O que o teste `Complete_WhenTaskIsCanceled_ShouldReturnConflict` protege?
+- O que o teste `Cancel_WhenTaskIsCompleted_ShouldReturnConflict` protege?
+- Por que comparar `CompletedAt` com `Assert.Equal` e mais forte do que usar apenas `Assert.NotNull`?
+- Por que um helper de teste pode ser `private static`?

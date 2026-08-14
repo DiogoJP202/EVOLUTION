@@ -49,3 +49,6 @@ Assuntos que precisam de reforco:
 | 2026-08-13 | TaskManager API | Fake repository | Criada `FakeTaskItemRepository` no projeto de testes para testar `TaskItemService` sem subir HTTP, sem banco e sem usar `Program.cs`. |
 | 2026-08-13 | TaskManager API | Primeiro teste | Criado `Complete_WhenTaskIsCanceled_ShouldReturnConflict`, validando que tarefa cancelada nao pode ser concluida. |
 | 2026-08-13 | TaskManager API | Onde paramos | Proxima tarefa: criar `Cancel_WhenTaskIsCompleted_ShouldReturnConflict`; pergunta pendente registrada em `UltimaConversa.md`. |
+| 2026-08-14 | TaskManager API | Segundo teste | Criado `Cancel_WhenTaskIsCompleted_ShouldReturnConflict`, validando que tarefa concluida nao pode ser cancelada e preserva `CompletedAt`. |
+| 2026-08-14 | TaskManager API | Helper de teste | Criado `CreateServiceWithTasks` para reduzir repeticao no Arrange dos testes da Service. |
+| 2026-08-14 | TaskManager API | Onde paramos | Proxima retomada: responder por que o helper pode ser `private static`, revisar o arquivo de testes e rodar `dotnet test`. |

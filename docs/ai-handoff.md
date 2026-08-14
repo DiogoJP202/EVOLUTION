@@ -4,7 +4,7 @@ Este documento existe para permitir que outra IA continue a mentoria de onde ela
 
 ## Estado atual
 
-Data do registro: 2026-08-13
+Data do registro: 2026-08-14
 
 Repositorio: ProjetoCSharp
 
@@ -68,6 +68,10 @@ Objetivo do repositorio:
 - Criado primeiro teste unitario real: `Complete_WhenTaskIsCanceled_ShouldReturnConflict`.
 - `dotnet test` foi executado pelo aluno e passou com 1 teste.
 - Criado `UltimaConversa.md` na raiz para registrar o ultimo ponto pendente da mentoria.
+- Criado segundo teste unitario real: `Cancel_WhenTaskIsCompleted_ShouldReturnConflict`.
+- O teste de cancelamento de tarefa concluida foi fortalecido para comparar o valor exato de `CompletedAt`.
+- Criado helper `CreateServiceWithTasks(List<TaskItem> tasks)` em `TaskItemServiceTests`.
+- O ultimo `dotnet test` reportado pelo aluno passou com 2 testes.
 
 ## Onde o aluno parou
 
@@ -85,7 +89,8 @@ Objetivo do repositorio:
 - O build esta passando sem warnings.
 - Ja existe projeto de testes automatizados com xUnit.
 - Existe uma fake repository para testes da Service.
-- Existe 1 teste unitario passando.
+- Existem 2 testes unitarios reportados como passando.
+- `TaskItemServiceTests` possui helper `CreateServiceWithTasks`.
 - Ainda nao existe banco de dados ou testes de integracao.
 - O ponto pendente atual esta em `UltimaConversa.md`.
 - O aluno quer escrever o codigo por conta propria.
@@ -102,7 +107,8 @@ Objetivo do repositorio:
 - padrao AAA: Arrange, Act, Assert;
 - por que testar `TaskItemService` nao exige subir HTTP;
 - por que a fake repository fica no projeto de testes;
-- por que evitar `static` em fakes de teste.
+- por que evitar `static` em fakes de teste;
+- por que um helper de teste pode ser `private static`.
 
 2. Fazer uma revisao curta do codigo atual:
 
@@ -110,14 +116,15 @@ Objetivo do repositorio:
 - conferir se a Service ficou responsavel por regras de negocio;
 - conferir se a Repository ficou responsavel por dados em memoria;
 - conferir se `FakeTaskItemRepository` nao compartilha estado entre testes;
-- conferir se o teste `Complete_WhenTaskIsCanceled_ShouldReturnConflict` valida regra e preserva estado.
+- conferir se os testes `Complete_WhenTaskIsCanceled_ShouldReturnConflict` e `Cancel_WhenTaskIsCompleted_ShouldReturnConflict` validam regras e preservam estado.
+- revisar o helper `CreateServiceWithTasks`.
 
 3. Proxima tarefa sugerida:
 
-- responder a pergunta pendente: por que no teste de cancelamento de tarefa concluida faz sentido verificar que `CompletedAt` continua preenchido;
-- criar `Cancel_WhenTaskIsCompleted_ShouldReturnConflict`;
+- responder a pergunta pendente: por que `CreateServiceWithTasks` pode ser `private static`;
+- revisar `TaskItemServiceTests`;
 - rodar `dotnet test`;
-- pedir o codigo do teste e revisar.
+- escolher o proximo teste da Service, provavelmente `GetById_WhenTaskDoesNotExist_ShouldReturnNotFound`.
 
 4. Depois disso, decidir a proxima etapa:
 
@@ -201,6 +208,9 @@ Nivel estimado informado pelo aluno: 2,5 de 5.
 - Isolamento entre testes.
 - Estado compartilhado com `static`.
 - Project Reference em projeto de teste.
+- Helper de teste.
+- `private static` em metodo auxiliar.
+- Diferenca entre `Assert.NotNull` e `Assert.Equal` para garantir que um valor nao mudou.
 
 ## Pontos que precisam ser revisados
 
@@ -219,6 +229,7 @@ Nivel estimado informado pelo aluno: 2,5 de 5.
 - Diferenca entre teste unitario e teste de integracao.
 - Por que teste unitario da Service nao usa `Program.cs`.
 - Por que cada teste deve montar seu proprio cenario.
+- Por que helper de teste nao deve esconder o comportamento principal testado.
 
 ## Regras importantes para a IA
 

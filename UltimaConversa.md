@@ -6,15 +6,17 @@ Quando o aluno pedir para commitar e atualizar a documentacao, apagar o conteudo
 
 ## Ponto pendente
 
-Estamos criando testes unitarios para `TaskItemService` usando xUnit e uma `FakeTaskItemRepository`.
+Estamos refatorando testes unitarios de `TaskItemService` com xUnit, AAA e `FakeTaskItemRepository`.
 
 Ultima pergunta conceitual feita:
 
-> Por que, no teste `Cancel_WhenTaskIsCompleted_ShouldReturnConflict`, faz sentido verificar que `CompletedAt` continua preenchido?
+> Por que o helper `CreateServiceWithTasks` pode ser `private static`?
 
 ## Contexto rapido
 
-- O primeiro teste unitario util criado foi `Complete_WhenTaskIsCanceled_ShouldReturnConflict`.
-- Ele valida que uma tarefa cancelada nao pode ser concluida.
-- A proxima tarefa sugerida foi criar o teste irmao: uma tarefa concluida nao pode ser cancelada.
-- Ao testar cancelamento de uma tarefa concluida, devemos confirmar que a Service retorna `Conflict` e nao altera dados da tarefa.
+- Ja existem dois testes de regra de negocio em `TaskItemServiceTests`:
+  - `Complete_WhenTaskIsCanceled_ShouldReturnConflict`;
+  - `Cancel_WhenTaskIsCompleted_ShouldReturnConflict`.
+- O segundo teste foi fortalecido para comparar o valor exato de `CompletedAt`, nao apenas `Assert.NotNull`.
+- O aluno criou o helper `CreateServiceWithTasks(List<TaskItem> tasks)` para reduzir repeticao no Arrange.
+- Proxima retomada: responder a pergunta sobre `private static`, revisar o helper e rodar `dotnet test`.
