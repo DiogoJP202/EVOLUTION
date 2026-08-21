@@ -331,11 +331,54 @@ public class TaskItemServiceTests
         Assert.Equal(ServiceErrorType.None, result.ErrorType);
     }
 
-    [Fact]
-    public void Complete_WhenTaskDoesNotExist_ShouldReturnNotFound()
-    {
+    // TODO:
+    // [Fact]
+    // public void Complete_WhenTaskDoesNotExist_ShouldReturnNotFound()
+    // {
         
-    }
+    // }
+
+    // [Fact]
+    // public void Complete_WhenTaskDoesNotExist_ShouldReturnNotFound()
+    // {
+        
+    // }
+
+    // [Fact]
+    // public void Complete_WhenTaskDoesNotExist_ShouldReturnNotFound()
+    // {
+        
+    // }
+
+    // [Fact]
+    // public void Complete_WhenTaskDoesNotExist_ShouldReturnNotFound()
+    // {
+        
+    // }
+
+    // [Fact]
+    // public void Complete_WhenTaskDoesNotExist_ShouldReturnNotFound()
+    // {
+        
+    // }
+
+    // [Fact]
+    // public void Complete_WhenTaskDoesNotExist_ShouldReturnNotFound()
+    // {
+        
+    // }
+
+    // [Fact]
+    // public void Complete_WhenTaskDoesNotExist_ShouldReturnNotFound()
+    // {
+        
+    // }
+
+    // [Fact]
+    // public void Complete_WhenTaskDoesNotExist_ShouldReturnNotFound()
+    // {
+        
+    // }
 
     private static TaskItemService CreateServiceWithTasks(List<TaskItem> tasks)
     {
