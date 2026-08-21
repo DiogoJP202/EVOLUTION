@@ -11,10 +11,10 @@ public class FakeTaskItemRepository : ITaskItemRepository
 
     public FakeTaskItemRepository(List<TaskItem> tasks)
     {
-        _tasks = tasks;
+        _tasks = tasks.ToList();
         _nextId = _tasks.Count == 0 
-        ? 0 
-        : tasks.Max(t => t.Id);
+            ? 0 
+            : _tasks.Max(t => t.Id);
     }
     
     public List<TaskItem> GetAll()
