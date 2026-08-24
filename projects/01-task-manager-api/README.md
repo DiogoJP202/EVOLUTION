@@ -72,10 +72,14 @@ Em andamento.
 - Primeiro teste unitario criado: `Complete_WhenTaskIsCanceled_ShouldReturnConflict`.
 - Segundo teste unitario criado: `Cancel_WhenTaskIsCompleted_ShouldReturnConflict`.
 - Helper `CreateServiceWithTasks` criado para reduzir repeticao no Arrange.
+- Suite `TaskItemServiceTests` ampliada para 22 testes unitarios.
+- Cobertos cenarios de criacao, busca, listagem, update, complete, cancel e delete.
+- Testados validacao de titulo, `Trim()` de titulo/descricao, filtro por status, conflitos de estado e remocao real de tarefa.
+- Revisada a suite para reduzir asserts repetidos, corrigir nomes e manter `Assert.NotNull(result.Data)` antes de acessar `result.Data!`.
 
 ## Onde paramos
 
-O ultimo assunto estudado foi teste unitario com xUnit, padrao AAA, fake repository e isolamento entre testes.
+O ultimo assunto estudado foi teste unitario com xUnit, padrao AAA, fake repository, isolamento entre testes, asserts especificos e cuidado com overtesting.
 
 Estado tecnico atual:
 
@@ -87,19 +91,16 @@ Estado tecnico atual:
 - `TasksController` traduz os resultados da Service para respostas HTTP;
 - `GET /api/tasks` pode retornar todas as tarefas ou filtrar por `TaskItemStatus`;
 - `TaskManager.Api.Tests` possui uma fake repository para montar cenarios de teste;
-- ja existem 2 testes unitarios para proteger regras de conclusao/cancelamento;
-- o ultimo `dotnet test` reportado passou com 2 testes.
+- ja existem 22 testes unitarios protegendo as regras principais da `TaskItemService`;
+- o ultimo `dotnet test` reportado passou com 22 testes.
 
 ## Pendencias proximas
 
-- Revisar xUnit, `[Fact]`, `Assert` e AAA.
-- Revisar por que `dotnet test` compila a API sem subir servidor HTTP.
-- Revisar por que `FakeTaskItemRepository` fica no projeto de testes.
-- Revisar por que evitar `static` em fakes de teste.
-- Responder por que o helper `CreateServiceWithTasks` pode ser `private static`.
-- Revisar o arquivo `TaskItemServiceTests`.
-- Rodar `dotnet test` apos a revisao.
-- Rodar `dotnet test` apos cada teste novo.
+- Revisar o lote de 22 testes e explicar quais regras cada grupo protege.
+- Revisar a diferenca entre testar regra principal e fazer overtesting.
+- Revisar por que alguns testes usam `GetAll` ou `GetById` para confirmar efeitos colaterais.
+- Decidir a proxima etapa tecnica: testes de integracao da API ou inicio da persistencia com Entity Framework Core.
+- Rodar `dotnet test` antes de cada commit relevante.
 
 ## Testes
 
@@ -122,8 +123,28 @@ Estado atual:
 - testes existentes:
   - `Complete_WhenTaskIsCanceled_ShouldReturnConflict`;
   - `Cancel_WhenTaskIsCompleted_ShouldReturnConflict`;
+  - `GetById_WhenTaskDoesNotExist_ShouldReturnNotFound`;
+  - `Create_WhenTitleIsEmpty_ShouldReturnValidation`;
+  - `Create_WhenTitleHasOnlySpaces_ShouldReturnValidation`;
+  - `Create_WhenTitleIsValid_ShouldCreateTask`;
+  - `Create_WhenDescriptionIsNull_ShouldCreateTaskWithNullDescription`;
+  - `Create_WhenDescriptionHasSpaces_ShouldTrimDescription`;
+  - `GetById_WhenTaskExists_ShouldReturnTask`;
+  - `GetAll_WhenStatusFilterIsNull_ShouldReturnAllTasks`;
+  - `GetAll_WhenStatusFilterIsCompleted_ShouldReturnOnlyCompletedTasks`;
+  - `Update_WhenTaskDoesNotExist_ShouldReturnNotFound`;
+  - `Update_WhenTitleIsEmpty_ShouldReturnValidation`;
+  - `Update_WhenTitleHasOnlySpaces_ShouldReturnValidation`;
+  - `Update_WhenDataIsValid_ShouldUpdateTask`;
+  - `Complete_WhenTaskDoesNotExist_ShouldReturnNotFound`;
+  - `Complete_WhenTaskIsPending_ShouldCompleteTask`;
+  - `Cancel_WhenTaskDoesNotExist_ShouldReturnNotFound`;
+  - `Cancel_WhenTaskIsPending_ShouldCancelTask`;
+  - `Delete_WhenTaskDoesNotExist_ShouldReturnNotFound`;
+  - `Delete_WhenTaskExists_ShouldRemoveTask`;
+  - `Create_WhenDescriptionHasOnlySpaces_ShouldTrimDescriptionToEmptyString`;
 - helper existente: `CreateServiceWithTasks`;
-- objetivo atual: testar regras de negocio da `TaskItemService` sem subir a API.
+- objetivo atual: manter a Service protegida por testes unitarios antes de evoluir infraestrutura.
 
 ## Pendencias futuras
 

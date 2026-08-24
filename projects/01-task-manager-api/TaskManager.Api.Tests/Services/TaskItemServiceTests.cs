@@ -2,8 +2,6 @@
 using TaskManager.Api.Services;
 using TaskManager.Api.Tests.Fakes;
 using TaskManager.Api.Requests;
-using Microsoft.AspNetCore.Authorization.Infrastructure;
-
 namespace TaskManager.Api.Tests.Services;
 
 public class TaskItemServiceTests
@@ -124,8 +122,8 @@ public class TaskItemServiceTests
         ServiceResult<List<TaskItem>> savedTasks = service.GetAll(null);
 
         Assert.True(result.Success);
-        Assert.Equal("TaskName", result.Data!.Title);
         Assert.NotNull(result.Data);
+        Assert.Equal("TaskName", result.Data!.Title);
         Assert.Null(result.ErrorMessage);
         Assert.Single(savedTasks.Data!);
         Assert.Equal(TaskItemStatus.Pending, result.Data!.Status);
@@ -165,11 +163,11 @@ public class TaskItemServiceTests
         ServiceResult<List<TaskItem>> repoTasks = service.GetAll(null);
 
         Assert.True(result.Success);
-        Assert.Equal("Trimed Description.", result.Data!.Description);
-        Assert.Null(result.ErrorMessage);
-        Assert.Single(repoTasks.Data!);
         Assert.NotNull(result.Data);
+        Assert.Single(repoTasks.Data!);
+        Assert.Equal("Trimed Description.", result.Data!.Description);
         Assert.Equal(TaskItemStatus.Pending, result.Data!.Status);
+        Assert.Null(result.ErrorMessage);
     }
 
     [Fact]
@@ -327,58 +325,137 @@ public class TaskItemServiceTests
         Assert.NotNull(result.Data);
         Assert.Equal(newTaskData.Title, result.Data.Title);
         Assert.Equal(newTaskData.Description, result.Data.Description);
+        Assert.Equal(createdAt, result.Data.CreatedAt);
         Assert.Null(result.ErrorMessage);
         Assert.Equal(ServiceErrorType.None, result.ErrorType);
     }
 
-    // TODO:
-    // [Fact]
-    // public void Complete_WhenTaskDoesNotExist_ShouldReturnNotFound()
-    // {
-        
-    // }
+    [Fact]
+    public void Complete_WhenTaskDoesNotExist_ShouldReturnNotFound()
+    {
+        var service = CreateServiceWithTasks([]);
 
-    // [Fact]
-    // public void Complete_WhenTaskDoesNotExist_ShouldReturnNotFound()
-    // {
-        
-    // }
+        ServiceResult<TaskItem> result = service.Complete(999);
 
-    // [Fact]
-    // public void Complete_WhenTaskDoesNotExist_ShouldReturnNotFound()
-    // {
-        
-    // }
+        Assert.False(result.Success);
+        Assert.Equal(ServiceErrorType.NotFound, result.ErrorType);
+        Assert.NotNull(result.ErrorMessage);
+        Assert.Null(result.Data);
+    }
 
-    // [Fact]
-    // public void Complete_WhenTaskDoesNotExist_ShouldReturnNotFound()
-    // {
-        
-    // }
+    [Fact]
+    public void Complete_WhenTaskIsPending_ShouldCompleteTask()
+    {
+        TaskItem task = new()
+        {
+            Id = 1,
+            Title = "Task #1",
+            Description = "Task Description.",
+            Status = TaskItemStatus.Pending
+        };
+        var service = CreateServiceWithTasks([task]);
 
-    // [Fact]
-    // public void Complete_WhenTaskDoesNotExist_ShouldReturnNotFound()
-    // {
-        
-    // }
+        ServiceResult<TaskItem> result = service.Complete(1);
 
-    // [Fact]
-    // public void Complete_WhenTaskDoesNotExist_ShouldReturnNotFound()
-    // {
-        
-    // }
+        Assert.True(result.Success);
+        Assert.NotNull(result.Data);
+        Assert.NotNull(result.Data!.CompletedAt);
+        Assert.Equal(TaskItemStatus.Completed, result.Data.Status);
+        Assert.Null(result.ErrorMessage);
+        Assert.Equal(ServiceErrorType.None, result.ErrorType);
+    }
 
-    // [Fact]
-    // public void Complete_WhenTaskDoesNotExist_ShouldReturnNotFound()
-    // {
-        
-    // }
+    [Fact]
+    public void Cancel_WhenTaskDoesNotExist_ShouldReturnNotFound()
+    {
+        var service = CreateServiceWithTasks([]);
 
-    // [Fact]
-    // public void Complete_WhenTaskDoesNotExist_ShouldReturnNotFound()
-    // {
+        ServiceResult<TaskItem> result = service.Cancel(999);
+
+        Assert.False(result.Success);
+        Assert.Equal(ServiceErrorType.NotFound, result.ErrorType);
+        Assert.NotNull(result.ErrorMessage);
+        Assert.Null(result.Data);
+    }
+
+    [Fact]
+    public void Cancel_WhenTaskIsPending_ShouldCancelTask()
+    {
+        TaskItem task = new()
+        {
+            Id = 1,
+            Title = "Task #1",
+            Description = "Task Description.",
+            Status = TaskItemStatus.Pending
+        };
+        var service = CreateServiceWithTasks([task]);
+
+        ServiceResult<TaskItem> result = service.Cancel(1);
+
+        Assert.True(result.Success);
+        Assert.NotNull(result.Data);
+        Assert.Null(result.Data.CompletedAt);
+        Assert.Equal(TaskItemStatus.Canceled, result.Data.Status);
+        Assert.Null(result.ErrorMessage);
+        Assert.Equal(ServiceErrorType.None, result.ErrorType);
+    }
+
+    [Fact]
+    public void Delete_WhenTaskDoesNotExist_ShouldReturnNotFound()
+    {
+        var service = CreateServiceWithTasks([]);
+
+        ServiceResult<bool> result = service.Delete(999);
+
+        Assert.False(result.Success);
+        Assert.Equal(ServiceErrorType.NotFound, result.ErrorType);
+        Assert.NotNull(result.ErrorMessage);
+        Assert.False(result.Data);   
+    }
+
+    [Fact]
+    public void Delete_WhenTaskExists_ShouldRemoveTask()
+    {
+        TaskItem task = new()
+        {
+            Id = 1,
+            Title = "Task #1",
+            Description = "Task Description.",
+            Status = TaskItemStatus.Pending
+        };
+        var service = CreateServiceWithTasks([task]);
         
-    // }
+        ServiceResult<bool> result = service.Delete(1);
+        ServiceResult<TaskItem> searchResult = service.GetById(1);
+
+        Assert.True(result.Success);
+        Assert.True(result.Data);
+
+        Assert.False(searchResult.Success);
+        Assert.Equal(ServiceErrorType.NotFound, searchResult.ErrorType);
+        Assert.Null(searchResult.Data);
+    }
+
+    [Fact]
+    public void Create_WhenDescriptionHasOnlySpaces_ShouldTrimDescriptionToEmptyString()
+    {
+        var service = CreateServiceWithTasks([]);
+        CreateTaskItemRequest request = new()
+        {
+            Title = "Valid Title.",
+            Description = "      "
+        };
+
+        var result = service.Create(request);
+        ServiceResult<List<TaskItem>> repoTasks = service.GetAll(null);
+
+        Assert.True(result.Success);
+        Assert.NotNull(result.Data);
+        Assert.Single(repoTasks.Data!);
+        Assert.Equal("", result.Data!.Description);
+        Assert.Equal(TaskItemStatus.Pending, result.Data!.Status);
+        Assert.Null(result.ErrorMessage);
+    }
 
     private static TaskItemService CreateServiceWithTasks(List<TaskItem> tasks)
     {

@@ -52,3 +52,6 @@ Assuntos que precisam de reforco:
 | 2026-08-14 | TaskManager API | Segundo teste | Criado `Cancel_WhenTaskIsCompleted_ShouldReturnConflict`, validando que tarefa concluida nao pode ser cancelada e preserva `CompletedAt`. |
 | 2026-08-14 | TaskManager API | Helper de teste | Criado `CreateServiceWithTasks` para reduzir repeticao no Arrange dos testes da Service. |
 | 2026-08-14 | TaskManager API | Onde paramos | Proxima retomada: responder por que o helper pode ser `private static`, revisar o arquivo de testes e rodar `dotnet test`. |
+| 2026-08-24 | TaskManager API | Suite unitaria da Service | Ampliada `TaskItemServiceTests` para 22 testes unitarios cobrindo `Create`, `GetAll`, `GetById`, `Update`, `Complete`, `Cancel` e `Delete`. |
+| 2026-08-24 | TaskManager API | Revisao de testes | Revisados asserts especificos, ordem `Assert.NotNull` antes de `Data!`, nomes de testes, verificacao de efeitos colaterais e risco de overtesting. |
+| 2026-08-24 | TaskManager API | Onde paramos | `dotnet test` reportado com 22 testes passando. Proxima etapa: revisar conceitualmente a suite e decidir entre testes de integracao ou EF Core. |

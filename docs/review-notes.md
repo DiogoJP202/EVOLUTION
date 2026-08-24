@@ -12,6 +12,9 @@ Este arquivo sera usado para registrar dificuldades, erros recorrentes, boas dec
 - Achar que build verde sempre significa arquitetura correta; no caso da interface, o build passava mesmo quando a Service ainda dependia da classe concreta.
 - Confundir valor numerico de enum com posicao de lista; `status=999` e invalido porque nao existe no enum, nao porque acessa indice.
 - Usar `static` em fake de teste pode compartilhar estado entre testes e tornar resultados imprevisiveis.
+- Acessar `result.Data!` antes de validar `Assert.NotNull(result.Data)`.
+- Usar `Assert.True` com boolean intermediario quando `Assert.Equal`, `Assert.Single` ou `Assert.Empty` comunicam melhor a intencao.
+- Criar asserts demais no mesmo teste pode virar overtesting e fazer o teste quebrar por detalhes que nao sao a regra principal.
 
 ## Boas decisoes
 
@@ -37,6 +40,9 @@ Este arquivo sera usado para registrar dificuldades, erros recorrentes, boas dec
 - Criar o primeiro teste unitario de regra de negocio: tarefa cancelada nao pode ser concluida.
 - Fortalecer o teste de tarefa concluida comparando o valor exato de `CompletedAt`, nao apenas verificando que ele nao e nulo.
 - Criar helper pequeno de teste para reduzir repeticao sem esconder o comportamento testado.
+- Fechar uma suite de 22 testes unitarios para `TaskItemService` antes de evoluir para banco ou integracao.
+- Validar efeitos colaterais importantes, como garantir que `Create` invalido nao adiciona tarefa e que `Delete` remove de fato a tarefa.
+- Revisar nomes de testes para funcionarem como documentacao viva do comportamento esperado.
 
 ## Pontos para revisar depois
 
@@ -71,3 +77,6 @@ Este arquivo sera usado para registrar dificuldades, erros recorrentes, boas dec
 - helpers de teste;
 - quando usar `private static` em metodo auxiliar de teste;
 - diferenca entre `Assert.NotNull` e `Assert.Equal` ao preservar um valor.
+- quando usar `Assert.Empty`, `Assert.Single` e `Assert.Equal` em vez de asserts genericos;
+- quando um teste esta protegendo uma regra e quando esta entrando em overtesting;
+- como agrupar testes por caso de uso sem misturar responsabilidade da Service com HTTP.

@@ -59,3 +59,9 @@ Este arquivo guardara perguntas curtas para revisar conceitos aprendidos.
 - O que o teste `Cancel_WhenTaskIsCompleted_ShouldReturnConflict` protege?
 - Por que comparar `CompletedAt` com `Assert.Equal` e mais forte do que usar apenas `Assert.NotNull`?
 - Por que um helper de teste pode ser `private static`?
+- Por que `Assert.Single` pode ser mais expressivo do que `Assert.NotEmpty`?
+- Por que validar `Assert.NotNull(result.Data)` antes de acessar `result.Data!`?
+- Quando usar `GetAll` ou `GetById` em um teste para confirmar que houve ou nao houve efeito colateral?
+- O que significa overtesting?
+- Por que teste unitario de Service nao deve validar status HTTP como `BadRequest` ou `NotFound`?
+- Quais regras principais a suite `TaskItemServiceTests` protege hoje?

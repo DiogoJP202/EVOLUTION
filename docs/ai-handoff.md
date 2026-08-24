@@ -4,7 +4,7 @@ Este documento existe para permitir que outra IA continue a mentoria de onde ela
 
 ## Estado atual
 
-Data do registro: 2026-08-14
+Data do registro: 2026-08-24
 
 Repositorio: ProjetoCSharp
 
@@ -71,7 +71,11 @@ Objetivo do repositorio:
 - Criado segundo teste unitario real: `Cancel_WhenTaskIsCompleted_ShouldReturnConflict`.
 - O teste de cancelamento de tarefa concluida foi fortalecido para comparar o valor exato de `CompletedAt`.
 - Criado helper `CreateServiceWithTasks(List<TaskItem> tasks)` em `TaskItemServiceTests`.
-- O ultimo `dotnet test` reportado pelo aluno passou com 2 testes.
+- Suite `TaskItemServiceTests` ampliada para 22 testes unitarios.
+- Foram cobertos `Create`, `GetAll`, `GetById`, `Update`, `Complete`, `Cancel` e `Delete`.
+- A suite cobre validacoes de titulo, `Trim()` de titulo e descricao, filtros por status, conflitos de estado, not found, criacao com sucesso, update com sucesso e delete real.
+- A suite foi revisada para melhorar nomes, ordem dos asserts, uso de `Assert.Single`, `Assert.Empty`, `Assert.Equal` e cuidado com `Data!`.
+- O ultimo `dotnet test` reportado pelo aluno passou com 22 testes.
 
 ## Onde o aluno parou
 
@@ -89,8 +93,9 @@ Objetivo do repositorio:
 - O build esta passando sem warnings.
 - Ja existe projeto de testes automatizados com xUnit.
 - Existe uma fake repository para testes da Service.
-- Existem 2 testes unitarios reportados como passando.
+- Existem 22 testes unitarios reportados como passando.
 - `TaskItemServiceTests` possui helper `CreateServiceWithTasks`.
+- A suite principal da `TaskItemService` esta fechada para as regras atuais do CRUD em memoria.
 - Ainda nao existe banco de dados ou testes de integracao.
 - O ponto pendente atual esta em `UltimaConversa.md`.
 - O aluno quer escrever o codigo por conta propria.
@@ -98,7 +103,7 @@ Objetivo do repositorio:
 
 ## Proximo passo sugerido
 
-1. Retomar pela revisao conceitual da ultima etapa:
+1. Retomar pela revisao conceitual do lote de testes:
 
 - o que e teste unitario;
 - o que e xUnit;
@@ -108,7 +113,9 @@ Objetivo do repositorio:
 - por que testar `TaskItemService` nao exige subir HTTP;
 - por que a fake repository fica no projeto de testes;
 - por que evitar `static` em fakes de teste;
-- por que um helper de teste pode ser `private static`.
+- por que um helper de teste pode ser `private static`;
+- por que `Assert.Single`, `Assert.Empty` e `Assert.Equal` podem comunicar melhor que `Assert.True`;
+- o que e overtesting e como evitar asserts que nao protegem a regra principal.
 
 2. Fazer uma revisao curta do codigo atual:
 
@@ -116,20 +123,19 @@ Objetivo do repositorio:
 - conferir se a Service ficou responsavel por regras de negocio;
 - conferir se a Repository ficou responsavel por dados em memoria;
 - conferir se `FakeTaskItemRepository` nao compartilha estado entre testes;
-- conferir se os testes `Complete_WhenTaskIsCanceled_ShouldReturnConflict` e `Cancel_WhenTaskIsCompleted_ShouldReturnConflict` validam regras e preservam estado.
-- revisar o helper `CreateServiceWithTasks`.
+- conferir se `TaskItemServiceTests` esta organizada por comportamento e com nomes claros;
+- conferir se os testes validam regras importantes sem excesso de asserts.
 
 3. Proxima tarefa sugerida:
 
-- responder a pergunta pendente: por que `CreateServiceWithTasks` pode ser `private static`;
-- revisar `TaskItemServiceTests`;
-- rodar `dotnet test`;
-- escolher o proximo teste da Service, provavelmente `GetById_WhenTaskDoesNotExist_ShouldReturnNotFound`.
+- pedir ao aluno para explicar, com as proprias palavras, o que cada grupo de testes protege;
+- revisar quando uma Service deve retornar `Validation`, `NotFound` ou `Conflict`;
+- rodar `dotnet test` como rotina antes do proximo commit relevante.
 
 4. Depois disso, decidir a proxima etapa:
 
-- introduzir validacao por atributos; ou
-- continuar cobrindo regras da Service com testes unitarios.
+- iniciar testes de integracao da API; ou
+- iniciar a transicao da lista em memoria para Entity Framework Core.
 
 ## Perfil atual do aluno
 
@@ -211,6 +217,12 @@ Nivel estimado informado pelo aluno: 2,5 de 5.
 - Helper de teste.
 - `private static` em metodo auxiliar.
 - Diferenca entre `Assert.NotNull` e `Assert.Equal` para garantir que um valor nao mudou.
+- `Assert.Empty` e `Assert.Single`.
+- Ordem `expected, actual` em `Assert.Equal`.
+- Efeito colateral em testes.
+- Overtesting.
+- Teste de caminho feliz e caminho de erro.
+- Diferenca entre validar regra de Service e validar resposta HTTP da Controller.
 
 ## Pontos que precisam ser revisados
 
@@ -230,6 +242,9 @@ Nivel estimado informado pelo aluno: 2,5 de 5.
 - Por que teste unitario da Service nao usa `Program.cs`.
 - Por que cada teste deve montar seu proprio cenario.
 - Por que helper de teste nao deve esconder o comportamento principal testado.
+- Por que `ServiceErrorType.Validation` nao e o mesmo que `BadRequest`; a Service fala em erro de negocio e a Controller traduz para HTTP.
+- Como decidir quais asserts sao centrais para uma regra e quais sao repeticao.
+- Por que um teste de `Delete` deve provar que a tarefa nao pode mais ser buscada.
 
 ## Regras importantes para a IA
 
