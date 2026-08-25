@@ -15,6 +15,8 @@ Este arquivo sera usado para registrar dificuldades, erros recorrentes, boas dec
 - Acessar `result.Data!` antes de validar `Assert.NotNull(result.Data)`.
 - Usar `Assert.True` com boolean intermediario quando `Assert.Equal`, `Assert.Single` ou `Assert.Empty` comunicam melhor a intencao.
 - Criar asserts demais no mesmo teste pode virar overtesting e fazer o teste quebrar por detalhes que nao sao a regra principal.
+- Confundir `CreatedAt` com `CompletedAt`; concluir uma tarefa deve preencher `CompletedAt`, enquanto `CreatedAt` deve continuar sendo a data de criacao.
+- Um helper que cria `WebApplicationFactory<Program>` com `await using` e retorna apenas `HttpClient` descarta a factory ao sair do metodo, podendo matar a aplicacao de teste cedo demais.
 
 ## Boas decisoes
 
@@ -43,6 +45,9 @@ Este arquivo sera usado para registrar dificuldades, erros recorrentes, boas dec
 - Fechar uma suite de 22 testes unitarios para `TaskItemService` antes de evoluir para banco ou integracao.
 - Validar efeitos colaterais importantes, como garantir que `Create` invalido nao adiciona tarefa e que `Delete` remove de fato a tarefa.
 - Revisar nomes de testes para funcionarem como documentacao viva do comportamento esperado.
+- Iniciar testes de integracao somente depois de proteger a Service com testes unitarios.
+- Usar `WebApplicationFactory<Program>` para testar a API em memoria sem rodar `dotnet run`.
+- Reconhecer que teste de integracao valida rota, pipeline HTTP, DI, Controller, Service e Repository trabalhando juntos.
 
 ## Pontos para revisar depois
 
@@ -80,3 +85,7 @@ Este arquivo sera usado para registrar dificuldades, erros recorrentes, boas dec
 - quando usar `Assert.Empty`, `Assert.Single` e `Assert.Equal` em vez de asserts genericos;
 - quando um teste esta protegendo uma regra e quando esta entrando em overtesting;
 - como agrupar testes por caso de uso sem misturar responsabilidade da Service com HTTP.
+- diferenca entre teste unitario da Service e teste de integracao da API;
+- `WebApplicationFactory<Program>`, `HttpClient`, `GetAsync`, `async Task` e `await`;
+- por que `Program.cs` precisa expor `public partial class Program { }` para os testes de integracao;
+- warning `Failed to determine the https port for redirect` em testes com `UseHttpsRedirection()`.

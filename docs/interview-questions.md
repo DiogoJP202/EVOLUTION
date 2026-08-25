@@ -65,3 +65,12 @@ Este arquivo guardara perguntas curtas para revisar conceitos aprendidos.
 - O que significa overtesting?
 - Por que teste unitario de Service nao deve validar status HTTP como `BadRequest` ou `NotFound`?
 - Quais regras principais a suite `TaskItemServiceTests` protege hoje?
+- Qual a diferenca entre chamar `service.Create(request)` e fazer `POST /api/tasks` em um teste?
+- O que um teste de integracao da API consegue pegar que um teste unitario da Service nao pega?
+- O que `WebApplicationFactory<Program>` cria durante um teste?
+- Por que o teste de integracao usa `HttpClient`?
+- Por que um teste com `GetAsync` deve ser `async Task`?
+- Por que `partial class Program { }` deve ser `public` para uso com `WebApplicationFactory<Program>`?
+- Por que um helper que retorna `HttpClient` depois de descartar a `WebApplicationFactory` pode falhar?
+- Para que serve `ReadFromJsonAsync<T>()`?
+- O primeiro teste de integracao `Get_WhenCalled_ShouldReturnOk` valida regra de negocio ou apenas a existencia funcional da rota?

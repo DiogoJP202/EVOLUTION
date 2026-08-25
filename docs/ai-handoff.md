@@ -4,7 +4,7 @@ Este documento existe para permitir que outra IA continue a mentoria de onde ela
 
 ## Estado atual
 
-Data do registro: 2026-08-24
+Data do registro: 2026-08-25
 
 Repositorio: ProjetoCSharp
 
@@ -75,7 +75,14 @@ Objetivo do repositorio:
 - Foram cobertos `Create`, `GetAll`, `GetById`, `Update`, `Complete`, `Cancel` e `Delete`.
 - A suite cobre validacoes de titulo, `Trim()` de titulo e descricao, filtros por status, conflitos de estado, not found, criacao com sucesso, update com sucesso e delete real.
 - A suite foi revisada para melhorar nomes, ordem dos asserts, uso de `Assert.Single`, `Assert.Empty`, `Assert.Equal` e cuidado com `Data!`.
-- O ultimo `dotnet test` reportado pelo aluno passou com 22 testes.
+- O aluno revisou efeito colateral e overtesting.
+- Foi corrigida a confusao entre `CreatedAt` e `CompletedAt`: concluir uma tarefa deve preencher `CompletedAt`; `CreatedAt` nao deve mudar.
+- Adicionado pacote `Microsoft.AspNetCore.Mvc.Testing` ao projeto `TaskManager.Api.Tests`.
+- `Program.cs` recebeu `public partial class Program { }` para permitir `WebApplicationFactory<Program>` nos testes.
+- Criada pasta `Integration` no projeto de testes.
+- Criado primeiro teste de integracao: `Get_WhenCalled_ShouldReturnOk`.
+- Esse teste usa `WebApplicationFactory<Program>`, `HttpClient` e `GetAsync("/api/tasks")` para validar `200 OK`.
+- O ultimo `dotnet test` reportado pelo aluno passou com 23 testes.
 
 ## Onde o aluno parou
 
@@ -96,26 +103,25 @@ Objetivo do repositorio:
 - Existem 22 testes unitarios reportados como passando.
 - `TaskItemServiceTests` possui helper `CreateServiceWithTasks`.
 - A suite principal da `TaskItemService` esta fechada para as regras atuais do CRUD em memoria.
-- Ainda nao existe banco de dados ou testes de integracao.
+- Existe 1 teste de integracao em `TaskManager.Api.Tests/Integration/TasksControllerIntegrationTests.cs`.
+- Ainda nao existe banco de dados.
 - O ponto pendente atual esta em `UltimaConversa.md`.
 - O aluno quer escrever o codigo por conta propria.
 - A IA deve explicar conceitos antes da tarefa, fazer perguntas de entendimento e depois pedir a implementacao.
 
 ## Proximo passo sugerido
 
-1. Retomar pela revisao conceitual do lote de testes:
+1. Retomar pela revisao conceitual dos testes de integracao:
 
-- o que e teste unitario;
-- o que e xUnit;
-- para que serve `[Fact]`;
-- o que e `Assert`;
-- padrao AAA: Arrange, Act, Assert;
-- por que testar `TaskItemService` nao exige subir HTTP;
-- por que a fake repository fica no projeto de testes;
-- por que evitar `static` em fakes de teste;
-- por que um helper de teste pode ser `private static`;
-- por que `Assert.Single`, `Assert.Empty` e `Assert.Equal` podem comunicar melhor que `Assert.True`;
-- o que e overtesting e como evitar asserts que nao protegem a regra principal.
+- diferenca entre teste unitario da Service e teste de integracao da API;
+- `WebApplicationFactory<Program>` como aplicacao ASP.NET Core em memoria;
+- `HttpClient`;
+- `GetAsync`;
+- `async Task` e `await`;
+- por que o xUnit precisa esperar uma operacao assincrona terminar;
+- por que `Program` precisa estar publico para `WebApplicationFactory<Program>`;
+- por que um helper com `await using var factory` que retorna apenas `HttpClient` descarta a factory cedo demais;
+- warning `Failed to determine the https port for redirect` causado por `UseHttpsRedirection()` no ambiente de teste.
 
 2. Fazer uma revisao curta do codigo atual:
 
@@ -124,17 +130,21 @@ Objetivo do repositorio:
 - conferir se a Repository ficou responsavel por dados em memoria;
 - conferir se `FakeTaskItemRepository` nao compartilha estado entre testes;
 - conferir se `TaskItemServiceTests` esta organizada por comportamento e com nomes claros;
-- conferir se os testes validam regras importantes sem excesso de asserts.
+- conferir se os testes validam regras importantes sem excesso de asserts;
+- conferir `TasksControllerIntegrationTests` e remover ou discutir o helper `CreateClient` que nao deve ser usado do jeito atual.
 
 3. Proxima tarefa sugerida:
 
-- pedir ao aluno para explicar, com as proprias palavras, o que cada grupo de testes protege;
-- revisar quando uma Service deve retornar `Validation`, `NotFound` ou `Conflict`;
-- rodar `dotnet test` como rotina antes do proximo commit relevante.
+- criar teste de integracao `GetById_WhenTaskExists_ShouldReturnOk`;
+- chamar `GET /api/tasks/1`;
+- validar `HttpStatusCode.OK`;
+- ler o JSON com `ReadFromJsonAsync<TaskItem>`;
+- validar que `id` e `1` e que `title` nao veio vazio;
+- adicionar `using System.Net.Http.Json;`.
 
 4. Depois disso, decidir a proxima etapa:
 
-- iniciar testes de integracao da API; ou
+- continuar cobrindo endpoints principais com testes de integracao; ou
 - iniciar a transicao da lista em memoria para Entity Framework Core.
 
 ## Perfil atual do aluno
@@ -223,6 +233,16 @@ Nivel estimado informado pelo aluno: 2,5 de 5.
 - Overtesting.
 - Teste de caminho feliz e caminho de erro.
 - Diferenca entre validar regra de Service e validar resposta HTTP da Controller.
+- Efeito colateral em metodos como `Create` e `Delete`.
+- `CompletedAt` vs `CreatedAt`.
+- Teste de integracao.
+- `Microsoft.AspNetCore.Mvc.Testing`.
+- `WebApplicationFactory<Program>`.
+- `HttpClient`.
+- `GetAsync`.
+- `async Task` em testes.
+- `await`.
+- `ReadFromJsonAsync<T>` foi apresentado como proximo conceito, ainda nao implementado pelo aluno.
 
 ## Pontos que precisam ser revisados
 
@@ -245,6 +265,10 @@ Nivel estimado informado pelo aluno: 2,5 de 5.
 - Por que `ServiceErrorType.Validation` nao e o mesmo que `BadRequest`; a Service fala em erro de negocio e a Controller traduz para HTTP.
 - Como decidir quais asserts sao centrais para uma regra e quais sao repeticao.
 - Por que um teste de `Delete` deve provar que a tarefa nao pode mais ser buscada.
+- Diferenca entre `CreatedAt` e `CompletedAt`.
+- Ciclo de vida de `WebApplicationFactory<Program>` e por que ela precisa ficar viva enquanto o `HttpClient` e usado.
+- Diferenca entre validar apenas `200 OK` e validar tambem o corpo JSON.
+- Testes de integracao sao mais lentos porque passam por pipeline HTTP, DI, Controller, Service e Repository.
 
 ## Regras importantes para a IA
 

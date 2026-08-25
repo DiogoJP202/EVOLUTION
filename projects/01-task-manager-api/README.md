@@ -76,10 +76,15 @@ Em andamento.
 - Cobertos cenarios de criacao, busca, listagem, update, complete, cancel e delete.
 - Testados validacao de titulo, `Trim()` de titulo/descricao, filtro por status, conflitos de estado e remocao real de tarefa.
 - Revisada a suite para reduzir asserts repetidos, corrigir nomes e manter `Assert.NotNull(result.Data)` antes de acessar `result.Data!`.
+- Pacote `Microsoft.AspNetCore.Mvc.Testing` adicionado ao projeto de testes.
+- `Program.cs` recebeu `public partial class Program { }` para permitir `WebApplicationFactory<Program>`.
+- Pasta `Integration` criada no projeto de testes.
+- Primeiro teste de integracao criado: `Get_WhenCalled_ShouldReturnOk`.
+- `GET /api/tasks` testado por HTTP em memoria com `HttpClient`, retornando `200 OK`.
 
 ## Onde paramos
 
-O ultimo assunto estudado foi teste unitario com xUnit, padrao AAA, fake repository, isolamento entre testes, asserts especificos e cuidado com overtesting.
+O ultimo assunto estudado foi a diferenca entre teste unitario da Service e teste de integracao da API. A suite unitaria foi fechada e os testes de integracao foram iniciados.
 
 Estado tecnico atual:
 
@@ -92,14 +97,18 @@ Estado tecnico atual:
 - `GET /api/tasks` pode retornar todas as tarefas ou filtrar por `TaskItemStatus`;
 - `TaskManager.Api.Tests` possui uma fake repository para montar cenarios de teste;
 - ja existem 22 testes unitarios protegendo as regras principais da `TaskItemService`;
-- o ultimo `dotnet test` reportado passou com 22 testes.
+- ja existe 1 teste de integracao para `GET /api/tasks`;
+- o ultimo `dotnet test` reportado passou com 23 testes.
 
 ## Pendencias proximas
 
-- Revisar o lote de 22 testes e explicar quais regras cada grupo protege.
-- Revisar a diferenca entre testar regra principal e fazer overtesting.
-- Revisar por que alguns testes usam `GetAll` ou `GetById` para confirmar efeitos colaterais.
-- Decidir a proxima etapa tecnica: testes de integracao da API ou inicio da persistencia com Entity Framework Core.
+- Revisar `WebApplicationFactory<Program>` como aplicacao ASP.NET Core em memoria para testes.
+- Revisar `HttpClient`, `GetAsync`, `async Task` e `await`.
+- Revisar por que um helper que usa `await using var factory` e retorna apenas `HttpClient` descarta a factory cedo demais.
+- Criar teste de integracao `GetById_WhenTaskExists_ShouldReturnOk`.
+- Ler o body JSON com `ReadFromJsonAsync<TaskItem>`.
+- Validar `200 OK`, `id = 1` e `title` preenchido.
+- Observar o warning `Failed to determine the https port for redirect` causado por `UseHttpsRedirection()` no ambiente de teste.
 - Rodar `dotnet test` antes de cada commit relevante.
 
 ## Testes
@@ -145,6 +154,11 @@ Estado atual:
   - `Create_WhenDescriptionHasOnlySpaces_ShouldTrimDescriptionToEmptyString`;
 - helper existente: `CreateServiceWithTasks`;
 - objetivo atual: manter a Service protegida por testes unitarios antes de evoluir infraestrutura.
+- pacote de integracao: `Microsoft.AspNetCore.Mvc.Testing`;
+- teste de integracao existente:
+  - `Get_WhenCalled_ShouldReturnOk`;
+- total reportado no ultimo `dotnet test`: 23 testes passando;
+- objetivo atual: iniciar testes de integracao da API sem subir servidor real em `localhost`.
 
 ## Pendencias futuras
 
@@ -152,5 +166,5 @@ Estado atual:
 - Criar validacoes mais robustas.
 - Adicionar tratamento global de erros.
 - Adicionar logging.
-- Criar testes de integracao.
+- Ampliar testes de integracao.
 - Evoluir para autenticacao e autorizacao.

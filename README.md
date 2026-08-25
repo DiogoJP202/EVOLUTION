@@ -8,7 +8,7 @@ Este espaco sera usado para separar os projetos da trilha, registrar progresso, 
 
 ![Barra de progresso animada](./assets/progress.svg)
 
-> Status atual: Projeto 01 em andamento. CRUD em memoria organizado em Controller, Service e Repository; API com filtro por status e suite unitaria da `TaskItemService` com 22 testes passando.
+> Status atual: Projeto 01 em andamento. CRUD em memoria organizado em Controller, Service e Repository; API com filtro por status, suite unitaria da `TaskItemService` com 22 testes e primeiro teste de integracao HTTP iniciado.
 
 ## Objetivo
 
@@ -211,7 +211,11 @@ Ultima etapa concluida:
 - ampliada a suite `TaskItemServiceTests` para 22 testes unitarios;
 - cobertos cenarios de `Create`, `GetAll`, `GetById`, `Update`, `Complete`, `Cancel` e `Delete`;
 - testados caminhos felizes, validacoes, conflitos de estado, `NotFound`, `Trim()` e ausencia de efeitos colaterais;
-- `dotnet test` reportado com 22 testes passando.
+- adicionado pacote `Microsoft.AspNetCore.Mvc.Testing` ao projeto de testes;
+- exposto `Program` como `public partial class Program` para uso com `WebApplicationFactory<Program>`;
+- criado primeiro teste de integracao em `TasksControllerIntegrationTests`;
+- testado `GET /api/tasks` retornando `200 OK` via `HttpClient`;
+- `dotnet test` reportado com 23 testes passando.
 
 Onde paramos:
 
@@ -219,11 +223,12 @@ Onde paramos:
 - a Service conhece regras de negocio e depende de `ITaskItemRepository`;
 - a Repository conhece a lista em memoria e o controle de ids;
 - a suite unitaria da Service cobre as regras principais do CRUD em memoria;
-- proxima etapa conceitual: revisar o lote de testes, explicar com as proprias palavras o que foi protegido e quando um teste vira overtesting;
-- proxima tarefa tecnica: decidir entre iniciar testes de integracao da API ou preparar a transicao para Entity Framework Core.
+- os testes de integracao da API foram iniciados com `WebApplicationFactory<Program>`;
+- proxima etapa conceitual: revisar `WebApplicationFactory`, `HttpClient`, `async Task`, `await` e ciclo de vida da factory;
+- proxima tarefa tecnica: criar `GetById_WhenTaskExists_ShouldReturnOk`, lendo o JSON com `ReadFromJsonAsync<TaskItem>`.
 
 Pendencias planejadas do Projeto 01:
 
-- adicionar testes de integracao;
+- ampliar testes de integracao;
 - trocar lista em memoria por Entity Framework Core;
 - adicionar tratamento de erros e logging.

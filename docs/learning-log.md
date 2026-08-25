@@ -55,3 +55,6 @@ Assuntos que precisam de reforco:
 | 2026-08-24 | TaskManager API | Suite unitaria da Service | Ampliada `TaskItemServiceTests` para 22 testes unitarios cobrindo `Create`, `GetAll`, `GetById`, `Update`, `Complete`, `Cancel` e `Delete`. |
 | 2026-08-24 | TaskManager API | Revisao de testes | Revisados asserts especificos, ordem `Assert.NotNull` antes de `Data!`, nomes de testes, verificacao de efeitos colaterais e risco de overtesting. |
 | 2026-08-24 | TaskManager API | Onde paramos | `dotnet test` reportado com 22 testes passando. Proxima etapa: revisar conceitualmente a suite e decidir entre testes de integracao ou EF Core. |
+| 2026-08-25 | TaskManager API | Revisao conceitual de testes | Revisados efeito colateral, overtesting e diferenca entre regra de negocio da Service e resposta HTTP da Controller. |
+| 2026-08-25 | TaskManager API | Testes de integracao | Adicionado `Microsoft.AspNetCore.Mvc.Testing`, exposto `Program` como `public partial` e criado primeiro teste de integracao com `WebApplicationFactory<Program>` e `HttpClient`. |
+| 2026-08-25 | TaskManager API | Onde paramos | `dotnet test` reportado com 23 testes passando. Proxima tarefa: criar `GetById_WhenTaskExists_ShouldReturnOk` e ler o JSON com `ReadFromJsonAsync<TaskItem>`. |
